@@ -1,18 +1,11 @@
 {
-  "name": "FixMe",
+  "name": "TakuhaiTracker",
   "scripts": {},
   "env":{
     "LANG":"ja_JP.UTF-8",
     "RACK_ENV":"production",
-    "TWITTER_CONSUMER_ID": {
-      "required": true
-    },
-    "TWITTER_CONSUMER_SECRET": {
-      "required": true
-    }
   },
   "addons":[
-    "memcachier",
     "mongolab"
   ]
 }

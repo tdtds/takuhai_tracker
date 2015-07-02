@@ -1,3 +1,3 @@
 require './app'
 use Rack::Logger
-run FixMe
+run TakuhaiTracker

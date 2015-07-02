@@ -5,8 +5,8 @@ production:
 development:
   sessions:
     default:
-      uri: mongodb://localhost:27017/fixme
+      uri: mongodb://localhost:27017/takuhai_tracker
 test:
   sessions:
     default:
-      uri: mongodb://localhost:27017/fixme
+      uri: mongodb://localhost:27017/takuhai_tracker

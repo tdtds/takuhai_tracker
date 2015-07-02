@@ -13,7 +13,7 @@ end
 
 require 'sinatra/asset_pipeline/task'
 require './app'
-Sinatra::AssetPipeline::Task.define! FixMe
+Sinatra::AssetPipeline::Task.define! TakuhaiTracker
 
 # Local Variables:
 # mode: ruby

@@ -12,9 +12,6 @@ gem 'haml', require: 'haml'
 gem 'mongoid', require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'
-gem 'dalli', require: 'dalli'
-gem "omniauth"
-gem "omniauth-twitter"
 
 gem 'takuhai_status', github: 'tdtds/takuhai_status'
 
