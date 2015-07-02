@@ -16,6 +16,8 @@ gem 'dalli', require: 'dalli'
 gem "omniauth"
 gem "omniauth-twitter"
 
+gem 'takuhai_status', github: 'tdtds/takuhai_status'
+
 source 'https://rails-assets.org' do
 	gem 'rails-assets-jquery'
 end

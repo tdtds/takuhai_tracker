@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/tdtds/takuhai_status.git
+  revision: 59d20c369a17078f998707d810dda5ba74616c9f
+  specs:
+    takuhai_status (0.1.0)
+      faraday
+      mechanize
+
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -23,14 +31,31 @@ GEM
     coffee-script-source (1.9.1.1)
     dalli (2.7.4)
     diff-lcs (1.2.5)
+    domain_name (0.5.24)
+      unf (>= 0.0.5, < 1.0.0)
     execjs (2.5.2)
+    faraday (0.9.1)
+      multipart-post (>= 1.2, < 3)
     haml (4.0.6)
       tilt
     hashie (3.4.2)
     hike (1.2.3)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     i18n (0.7.0)
     json (1.8.3)
+    mechanize (2.7.3)
+      domain_name (~> 0.5, >= 0.5.1)
+      http-cookie (~> 1.0)
+      mime-types (~> 2.0)
+      net-http-digest_auth (~> 1.1, >= 1.1.1)
+      net-http-persistent (~> 2.5, >= 2.5.2)
+      nokogiri (~> 1.4)
+      ntlm-http (~> 0.1, >= 0.1.1)
+      webrobots (>= 0.0.9, < 0.2)
     method_source (0.8.2)
+    mime-types (2.6.1)
+    mini_portile (0.6.2)
     mongoid (3.1.7)
       activemodel (~> 3.2)
       moped (~> 1.4)
@@ -38,6 +63,12 @@ GEM
       tzinfo (~> 0.3.29)
     moped (1.5.3)
     multi_json (1.11.1)
+    multipart-post (2.0.0)
+    net-http-digest_auth (1.4)
+    net-http-persistent (2.9.4)
+    nokogiri (1.6.6.2)
+      mini_portile (~> 0.6.0)
+    ntlm-http (0.1.1)
     oauth (0.4.7)
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
@@ -90,7 +121,7 @@ GEM
       sprockets (~> 2.12)
       sprockets-helpers (~> 1.1)
       sprockets-sass (~> 1.2)
-    sinatra-contrib (1.4.5)
+    sinatra-contrib (1.4.6)
       backports (>= 2.0)
       multi_json
       rack-protection
@@ -115,6 +146,10 @@ GEM
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.1)
+    webrobots (0.1.1)
     yui-compressor (0.12.0)
 
 PLATFORMS
@@ -137,6 +172,7 @@ DEPENDENCIES
   sinatra
   sinatra-asset-pipeline
   sinatra-reloader
+  takuhai_status!
   uglifier
   yui-compressor
 
