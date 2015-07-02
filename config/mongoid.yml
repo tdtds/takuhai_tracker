@@ -1,0 +1,12 @@
+production:
+  sessions:
+    default:
+      uri: <%= ENV['MONGOLAB_URI'] || ENV['MONGOHQ_URL'] %>
+development:
+  sessions:
+    default:
+      uri: mongodb://localhost:27017/fixme
+test:
+  sessions:
+    default:
+      uri: mongodb://localhost:27017/fixme
