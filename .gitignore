@@ -9,6 +9,7 @@
 /test/version_tmp/
 /tmp/
 /vendor/bundle/
+/assets/js/.module-cache/
 
 ## Specific to RubyMotion:
 .dat*

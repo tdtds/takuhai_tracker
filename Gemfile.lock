@@ -82,7 +82,13 @@ GEM
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     rails-assets-jquery (2.1.4)
+    rails-assets-react (0.13.3)
     rake (10.4.2)
+    react-jsx-sprockets (0.2.0)
+      execjs (>= 1.2.9)
+      sprockets (>= 2.0.3)
+      tilt (>= 1.3.3)
+      yajl-ruby
     rspec (3.3.0)
       rspec-core (~> 3.3.0)
       rspec-expectations (~> 3.3.0)
@@ -138,6 +144,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.1)
     webrobots (0.1.1)
+    yajl-ruby (1.2.1)
     yui-compressor (0.12.0)
 
 PLATFORMS
@@ -152,7 +159,9 @@ DEPENDENCIES
   puma
   rack_csrf
   rails-assets-jquery!
+  rails-assets-react!
   rake
+  react-jsx-sprockets
   rspec
   sinatra
   sinatra-asset-pipeline
