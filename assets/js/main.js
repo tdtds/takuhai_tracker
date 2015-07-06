@@ -12,9 +12,52 @@ jQuery.ajaxSetup({
 	}
 });
 
-var Main = React.createClass({displayName: "Main",
+var DataColmn = React.createClass({displayName: "DataColmn",
 	render:function() {
-		return('');
+		var item = this.props.item;
+		return(React.createElement("tr", null, 
+			React.createElement("th", null, item.service), 
+			React.createElement("td", null, item.key), 
+			React.createElement("td", null, item.time), 
+			React.createElement("td", null, item.status)
+		));
+	}
+});
+
+var DataTable = React.createClass({displayName: "DataTable",
+	render:function() {
+		var items = this.props.data.map(function(item)  {
+			return(React.createElement(DataColmn, {item: item, key: item.key}));
+		});
+		return(
+			React.createElement("table", null, 
+			items
+			)
+		);
+	}
+});
+
+var Main = React.createClass({displayName: "Main",
+	getInitialState:function() {
+		return {
+			user: jQuery('#main').attr('data-user'),
+			data: []
+		};
+	},
+	componentDidMount:function() {
+		jQuery.ajax({
+			url: '/' + this.state.user + '.json',
+			type: 'GET',
+			dataType: 'json',
+			cache: false
+		}).done(function(json)  {
+			this.setState({data: json});
+		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
+	render:function() {
+		return(React.createElement(DataTable, {data: this.state.data}));
 	}
 });
 
