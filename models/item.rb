@@ -8,6 +8,7 @@ module TakuhaiTracker
 
 		field :user_id, type: String
 		validates_presence_of :user_id, allow_nil: false
+		field :service, type: String
 		field :key, type: String
 		validates_uniqueness_of :key
 		validates_presence_of :key, allow_nil: false
