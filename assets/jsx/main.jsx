@@ -12,15 +12,13 @@ jQuery.ajaxSetup({
 	}
 });
 
-var TopMain = React.createClass({
+var Main = React.createClass({
 	render() {
-		return(
-			<p>FixMe</p>
-		);
+		return('');
 	}
 });
 
-var topMain = document.getElementById('top');
-if (topMain) {
-	React.render(<TopMain />, topMain);
+var main = document.getElementById('main');
+if (main) {
+	React.render(<Main />, main);
 }

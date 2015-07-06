@@ -1,0 +1,13 @@
+!!!
+%html
+	%head
+		%meta{charset: 'UTF-8'}
+		%title 宅配トラッカー - ユーザページ
+		!= stylesheet_tag 'application'
+	%body
+		%h1 宅配トラッカー - ユーザページ
+		%p
+			このページはあなた専用です。ブックマークしておくことで再利用できます。
+			このURLを他人に教えないよう注意して下さい。
+		#main{"data-user": user}
+		!= javascript_tag 'application'
