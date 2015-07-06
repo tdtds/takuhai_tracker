@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: 59d20c369a17078f998707d810dda5ba74616c9f
+  revision: acb3e4b36baa91ff3b4890dced79104ad0cf225b
   specs:
     takuhai_status (0.1.0)
       faraday
@@ -60,7 +60,7 @@ GEM
       origin (~> 1.0)
       tzinfo (~> 0.3.29)
     moped (1.5.3)
-    multi_json (1.11.1)
+    multi_json (1.11.2)
     multipart-post (2.0.0)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
