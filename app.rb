@@ -3,6 +3,7 @@
 #
 Bundler.require
 require_relative 'models/item'
+require_relative 'models/setting'
 
 module TakuhaiTracker
 	class App < Sinatra::Base
@@ -45,6 +46,29 @@ module TakuhaiTracker
 
 		post '/:user' do
 			redirect "/#{params[:user]}/#{params[:key]}"
+		end
+
+		get '/:user/setting.json' do
+			user = params[:user]
+			setting = TakuhaiTracker::Setting.where(user_id: user).first
+			unless setting
+				return 404, 'Document not Found'
+			else
+				return setting.to_json
+			end
+		end
+
+		post '/:user/setting' do
+			user = params[:user]
+			pushbullet = params[:pushbullet]
+			mail = params[:mail]
+			setting = TakuhaiTracker::Setting.find_or_create_by(user_id: user)
+			setting.update_attributes!(
+				user_id: user,
+				pushbullet: pushbullet,
+				mail: mail
+			)
+			return setting.to_json
 		end
 
 		get '/:user/:key' do

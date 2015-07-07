@@ -98,17 +98,42 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 });
 
 var Setting = React.createClass({displayName: "Setting",
+	propTypes: {
+		onSubmit:   React.PropTypes.func.isRequired,
+	},
 	render:function() {
 		return(React.createElement("div", null, 
-			React.createElement(PushbulletSetting, null)
+			React.createElement("h2", null, "通知設定"), 
+			React.createElement(PushbulletSetting, {apiKey: this.props.setting.pushbullet, onSubmit: this.props.onSubmit})
 		));
 	}
 });
 
 var PushbulletSetting = React.createClass({displayName: "PushbulletSetting",
+	propTypes: {
+		onSubmit: React.PropTypes.func.isRequired
+	},
+	getInitialState:function() {
+		return {key: ''};
+	},
+	componentWillReceiveProps:function(nextProps) {
+		this.setState({key: nextProps.apiKey});
+	},
+	onChange:function(e) {
+		this.setState({key: e.target.value});
+	},
+	onClick:function(e) {
+		e.preventDefault();
+		if(this.state.key.length > 0) {
+			this.props.onSubmit(this.state.key);
+			this.setState({key: ""});
+		};
+	},
 	render:function() {
-		return(React.createElement("div", null, 
-				"pushbullet setting"
+		return(React.createElement("form", {className: "pushbullet"}, 
+			"PushBullet API key:",  
+			React.createElement("input", {type: "text", ref: "inputKey", value: this.state.key, defaultValue: this.props.apiKey, onChange: this.onChange}), 
+			React.createElement("input", {type: "submit", value: "保存", onClick: this.onClick})
 		));
 	}
 });
@@ -117,7 +142,8 @@ var Main = React.createClass({displayName: "Main",
 	getInitialState:function() {
 		return {
 			user: jQuery('#main').attr('data-user'),
-			data: []
+			data: [],
+			setting: {}
 		};
 	},
 	updateData:function() {
@@ -132,6 +158,20 @@ var Main = React.createClass({displayName: "Main",
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	updateSetting:function() {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/setting.json',
+			type: 'GET',
+			dataType: 'json',
+			cache: false
+		}).done(function(json)  {
+			this.setState({setting: json});
+		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			if(XMLHttpRequest.status != 404) {
+				alert(textStatus+': '+errorThrown);
+			}
+		});
+	},
 	onEntryItem:function(key) {
 		jQuery.ajax({
 			url: '/' + this.state.user,
@@ -143,15 +183,28 @@ var Main = React.createClass({displayName: "Main",
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onSetting:function(pushbulletKey) {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/setting',
+			type: 'POST',
+			dataType: 'json',
+			data: {pushbullet: pushbulletKey, mail: ''}
+		}).done(function(json)  {
+			this.setState({setting: json});
+		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
 	componentDidMount:function() {
 		this.updateData();
+		this.updateSetting();
 	},
 	render:function() {
 		return(
 			React.createElement("div", null, 
 				React.createElement(DataTable, {data: this.state.data}), 
 				React.createElement(EntryItem, {onSubmit: this.onEntryItem, submitable: this.state.submitable}), 
-				React.createElement(Setting, null)
+				React.createElement(Setting, {setting: this.state.setting, onSubmit: this.onSetting})
 			)
 		);
 	}

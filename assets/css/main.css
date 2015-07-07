@@ -4,3 +4,7 @@
  * Copyright (C) 2015 by TADA Tadash <t@tdtds.jp>
  * You can modify and/or distribute this under GPL.
  */
+
+form.pushbullet input[type="text"] {
+	width: 21em;
+}

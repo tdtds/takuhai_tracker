@@ -98,18 +98,43 @@ var EntryItem = React.createClass({
 });
 
 var Setting = React.createClass({
+	propTypes: {
+		onSubmit:   React.PropTypes.func.isRequired,
+	},
 	render() {
 		return(<div>
-			<PushbulletSetting />
+			<h2>通知設定</h2>
+			<PushbulletSetting apiKey={this.props.setting.pushbullet} onSubmit={this.props.onSubmit} />
 		</div>);
 	}
 });
 
 var PushbulletSetting = React.createClass({
+	propTypes: {
+		onSubmit: React.PropTypes.func.isRequired
+	},
+	getInitialState() {
+		return {key: ''};
+	},
+	componentWillReceiveProps(nextProps) {
+		this.setState({key: nextProps.apiKey});
+	},
+	onChange(e) {
+		this.setState({key: e.target.value});
+	},
+	onClick(e) {
+		e.preventDefault();
+		if(this.state.key.length > 0) {
+			this.props.onSubmit(this.state.key);
+			this.setState({key: ""});
+		};
+	},
 	render() {
-		return(<div>
-				pushbullet setting
-		</div>);
+		return(<form className='pushbullet'>
+			PushBullet API key: 
+			<input type="text" ref="inputKey" value={this.state.key} defaultValue={this.props.apiKey} onChange={this.onChange} />
+			<input type="submit" value="保存" onClick={this.onClick} />
+		</form>);
 	}
 });
 
@@ -117,7 +142,8 @@ var Main = React.createClass({
 	getInitialState() {
 		return {
 			user: jQuery('#main').attr('data-user'),
-			data: []
+			data: [],
+			setting: {}
 		};
 	},
 	updateData() {
@@ -132,6 +158,20 @@ var Main = React.createClass({
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	updateSetting() {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/setting.json',
+			type: 'GET',
+			dataType: 'json',
+			cache: false
+		}).done((json) => {
+			this.setState({setting: json});
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			if(XMLHttpRequest.status != 404) {
+				alert(textStatus+': '+errorThrown);
+			}
+		});
+	},
 	onEntryItem(key) {
 		jQuery.ajax({
 			url: '/' + this.state.user,
@@ -143,15 +183,28 @@ var Main = React.createClass({
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onSetting(pushbulletKey) {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/setting',
+			type: 'POST',
+			dataType: 'json',
+			data: {pushbullet: pushbulletKey, mail: ''}
+		}).done((json) => {
+			this.setState({setting: json});
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
 	componentDidMount() {
 		this.updateData();
+		this.updateSetting();
 	},
 	render() {
 		return(
 			<div>
 				<DataTable data={this.state.data} />
 				<EntryItem onSubmit={this.onEntryItem} submitable={this.state.submitable} />
-				<Setting />
+				<Setting setting={this.state.setting} onSubmit={this.onSetting} />
 			</div>
 		);
 	}
