@@ -15,6 +15,8 @@ require 'sinatra/asset_pipeline/task'
 require './app'
 Sinatra::AssetPipeline::Task.define! TakuhaiTracker::App
 
+require './tasks/cron'
+
 desc 'watch jsx'
 task :watch_jsx do
 	sh 'jsx -w -x jsx --harmony assets/jsx assets/js'
