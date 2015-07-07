@@ -13,7 +13,7 @@ end
 
 require 'sinatra/asset_pipeline/task'
 require './app'
-Sinatra::AssetPipeline::Task.define! TakuhaiTracker
+Sinatra::AssetPipeline::Task.define! TakuhaiTracker::App
 
 desc 'watch jsx'
 task :watch_jsx do
