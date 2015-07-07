@@ -49,7 +49,7 @@ module TakuhaiTracker
 
 		get '/:user/:key' do
 			user = params[:user]
-			key = params[:key]
+			key = params[:key].gsub(/[^0-9]/, '')
 			begin
 				service = TakuhaiStatus.scan(key)
 				item = TakuhaiTracker::Item.find_or_create_by(user_id: user, key: key)
@@ -59,7 +59,9 @@ module TakuhaiTracker
 					status: service.state
 				)
 			rescue TakuhaiStatus::NotFound
-				TakuhaiTracker::Item.find_or_create_by(user_id: params[:user], key: key)
+				if key.length >= 12
+					TakuhaiTracker::Item.find_or_create_by(user_id: params[:user], key: key)
+				end
 			end
 			redirect "/#{params[:user]}"
 		end
