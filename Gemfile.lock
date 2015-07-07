@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: acb3e4b36baa91ff3b4890dced79104ad0cf225b
+  revision: 719e7cb02825df26d8b89ea12d82b2cb7c111b23
   specs:
     takuhai_status (0.1.0)
       faraday

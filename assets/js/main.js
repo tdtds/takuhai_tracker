@@ -12,28 +12,77 @@ jQuery.ajaxSetup({
 	}
 });
 
-var DataColmn = React.createClass({displayName: "DataColmn",
+var DataTable = React.createClass({displayName: "DataTable",
+	render:function() {
+		var items = this.props.data.map(function(item)  {
+			return(React.createElement(DataColumn, {item: item, key: item.key}));
+		});
+		return(
+			React.createElement("table", null, 
+				React.createElement("th", null, "伝票番号"), React.createElement("th", null, "運送会社"), React.createElement("th", null, "変更日時"), React.createElement("th", null, "ステータス"), 
+				items
+			)
+		);
+	}
+});
+
+var DataColumn = React.createClass({displayName: "DataColumn",
+	replaceServiceName:function(service) {
+		switch(service) {
+			case 'JapanPost':
+				return '日本郵便';
+			case 'KuronekoYamato':
+				return 'ヤマト運輸';
+			case 'Sagawa':
+				return '佐川急便';
+		}
+	},
+	formatDate:function(date, format) {
+		if (!format) {
+			format = 'YYYY-MM-DD';
+		}
+		format = format.replace(/YYYY/g, date.getFullYear());
+		format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+		format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
+		format = format.replace(/dd/g, ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]);
+		format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
+		format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+		format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+		return format;
+	},
 	render:function() {
 		var item = this.props.item;
+		var date = new Date(item.time);
 		return(React.createElement("tr", null, 
-			React.createElement("th", null, item.service), 
-			React.createElement("td", null, item.key), 
-			React.createElement("td", null, item.time), 
+			React.createElement("th", null, item.key), 
+			React.createElement("td", null, this.replaceServiceName(item.service)), 
+			React.createElement("td", null, this.formatDate(date, 'MM/DD hh:mm')), 
 			React.createElement("td", null, item.status)
 		));
 	}
 });
 
-var DataTable = React.createClass({displayName: "DataTable",
+var EntryItem = React.createClass({displayName: "EntryItem",
 	render:function() {
-		var items = this.props.data.map(function(item)  {
-			return(React.createElement(DataColmn, {item: item, key: item.key}));
-		});
 		return(
-			React.createElement("table", null, 
-			items
-			)
+			React.createElement("div", null, "enter item")
 		);
+	}
+});
+
+var Setting = React.createClass({displayName: "Setting",
+	render:function() {
+		return(React.createElement("div", null, 
+			React.createElement(PushbulletSetting, null)
+		));
+	}
+});
+
+var PushbulletSetting = React.createClass({displayName: "PushbulletSetting",
+	render:function() {
+		return(React.createElement("div", null, 
+				"pushbullet setting"
+		));
 	}
 });
 
@@ -57,7 +106,13 @@ var Main = React.createClass({displayName: "Main",
 		});
 	},
 	render:function() {
-		return(React.createElement(DataTable, {data: this.state.data}));
+		return(
+			React.createElement("div", null, 
+				React.createElement(DataTable, {data: this.state.data}), 
+				React.createElement(EntryItem, null), 
+				React.createElement(Setting, null)
+			)
+		);
 	}
 });
 
