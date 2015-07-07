@@ -50,11 +50,15 @@ module TakuhaiTracker
 
 		get '/:user/setting.json' do
 			user = params[:user]
-			setting = TakuhaiTracker::Setting.where(user_id: user).first
-			unless setting
+			begin
+				setting = TakuhaiTracker::Setting.where(user_id: user).first
+				unless setting
+					return 404, 'Document not Found'
+				else
+					return setting.to_json
+				end
+			rescue NoMethodError
 				return 404, 'Document not Found'
-			else
-				return setting.to_json
 			end
 		end
 
