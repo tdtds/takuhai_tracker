@@ -18,6 +18,8 @@ task :cron do
 					"#{item.service}: #{item_new.state}\n(No.#{item.key})"
 				)
 			end
+
+			item.update_attributes!(time: item_new.time, status: item_new.state)
 		end
 	end
 end
