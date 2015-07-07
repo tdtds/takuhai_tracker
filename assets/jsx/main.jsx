@@ -63,10 +63,37 @@ var DataColumn = React.createClass({
 });
 
 var EntryItem = React.createClass({
+	propTypes: {
+		onSubmit:   React.PropTypes.func.isRequired,
+		submitable: React.PropTypes.bool,
+	},
+	getInitialState() {
+		return {key: ""};
+	},
+	getDefaultProps() {
+		return {
+			submitable: true
+		};
+	},
+	componentDidMount() {
+		this.refs.inputKey.getDOMNode().focus();
+	},
+	onChange(e) {
+		this.setState({key: e.target.value});
+	},
+	onClick(e) {
+		e.preventDefault();
+		if(this.state.key.length > 0) {
+			this.props.onSubmit(this.state.key);
+			this.setState({key: ""});
+		};
+	},
 	render() {
-		return(
-			<div>enter item</div>
-		);
+		return(<form>
+			新しい伝票番号
+			<input ref="inputKey" value={this.state.key} onChange={this.onChange} />
+			<input type="submit" value="追加" disabled={!this.props.submitable} onClick={this.onClick} />
+		</form>);
 	}
 });
 
@@ -93,7 +120,7 @@ var Main = React.createClass({
 			data: []
 		};
 	},
-	componentDidMount() {
+	updateData() {
 		jQuery.ajax({
 			url: '/' + this.state.user + '.json',
 			type: 'GET',
@@ -105,11 +132,25 @@ var Main = React.createClass({
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onEntryItem(key) {
+		jQuery.ajax({
+			url: '/' + this.state.user,
+			type: 'POST',
+			data: {key: key}
+		}).done((json) => {
+			this.updateData();
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
+	componentDidMount() {
+		this.updateData();
+	},
 	render() {
 		return(
 			<div>
 				<DataTable data={this.state.data} />
-				<EntryItem />
+				<EntryItem onSubmit={this.onEntryItem} submitable={this.state.submitable} />
 				<Setting />
 			</div>
 		);

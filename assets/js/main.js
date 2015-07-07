@@ -63,10 +63,37 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 });
 
 var EntryItem = React.createClass({displayName: "EntryItem",
+	propTypes: {
+		onSubmit:   React.PropTypes.func.isRequired,
+		submitable: React.PropTypes.bool,
+	},
+	getInitialState:function() {
+		return {key: ""};
+	},
+	getDefaultProps:function() {
+		return {
+			submitable: true
+		};
+	},
+	componentDidMount:function() {
+		this.refs.inputKey.getDOMNode().focus();
+	},
+	onChange:function(e) {
+		this.setState({key: e.target.value});
+	},
+	onClick:function(e) {
+		e.preventDefault();
+		if(this.state.key.length > 0) {
+			this.props.onSubmit(this.state.key);
+			this.setState({key: ""});
+		};
+	},
 	render:function() {
-		return(
-			React.createElement("div", null, "enter item")
-		);
+		return(React.createElement("form", null, 
+			"新しい伝票番号", 
+			React.createElement("input", {ref: "inputKey", value: this.state.key, onChange: this.onChange}), 
+			React.createElement("input", {type: "submit", value: "追加", disabled: !this.props.submitable, onClick: this.onClick})
+		));
 	}
 });
 
@@ -93,7 +120,7 @@ var Main = React.createClass({displayName: "Main",
 			data: []
 		};
 	},
-	componentDidMount:function() {
+	updateData:function() {
 		jQuery.ajax({
 			url: '/' + this.state.user + '.json',
 			type: 'GET',
@@ -105,11 +132,25 @@ var Main = React.createClass({displayName: "Main",
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onEntryItem:function(key) {
+		jQuery.ajax({
+			url: '/' + this.state.user,
+			type: 'POST',
+			data: {key: key}
+		}).done(function(json)  {
+			this.updateData();
+		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
+	componentDidMount:function() {
+		this.updateData();
+	},
 	render:function() {
 		return(
 			React.createElement("div", null, 
 				React.createElement(DataTable, {data: this.state.data}), 
-				React.createElement(EntryItem, null), 
+				React.createElement(EntryItem, {onSubmit: this.onEntryItem, submitable: this.state.submitable}), 
 				React.createElement(Setting, null)
 			)
 		);
