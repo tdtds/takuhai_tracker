@@ -13,6 +13,6 @@ module TakuhaiTracker
 		validates_uniqueness_of :key
 		validates_presence_of :key, allow_nil: false
 		field :time, type: Time
-		field :status, type: String
+		field :state, type: String
 	end
 end

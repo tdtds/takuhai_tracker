@@ -57,7 +57,7 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 			React.createElement("th", null, item.key), 
 			React.createElement("td", null, this.replaceServiceName(item.service)), 
 			React.createElement("td", null, this.formatDate(date, 'MM/DD hh:mm')), 
-			React.createElement("td", null, item.status)
+			React.createElement("td", null, item.state)
 		));
 	}
 });
@@ -167,7 +167,7 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.setState({setting: json});
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			if(XMLHttpRequest.status != 404) {
+			if(XMLHttpRequest.state != 404) {
 				alert(textStatus+': '+errorThrown);
 			}
 		});

@@ -80,7 +80,7 @@ module TakuhaiTracker
 				item.update_attributes!(
 					service: service.class.to_s.split(/::/).last,
 					time: service.time,
-					status: service.state
+					state: service.state
 				)
 			rescue TakuhaiStatus::NotFound
 				if key.length >= 12

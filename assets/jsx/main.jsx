@@ -57,7 +57,7 @@ var DataColumn = React.createClass({
 			<th>{item.key}</th>
 			<td>{this.replaceServiceName(item.service)}</td>
 			<td>{this.formatDate(date, 'MM/DD hh:mm')}</td>
-			<td>{item.status}</td>
+			<td>{item.state}</td>
 		</tr>);
 	}
 });
@@ -167,7 +167,7 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.setState({setting: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			if(XMLHttpRequest.status != 404) {
+			if(XMLHttpRequest.state != 404) {
 				alert(textStatus+': '+errorThrown);
 			}
 		});
