@@ -18,9 +18,26 @@ var DataTable = React.createClass({displayName: "DataTable",
 			return(React.createElement(DataColumn, {item: item, key: item.key}));
 		});
 		return(
-			React.createElement("table", null, 
-				React.createElement("th", null, "伝票番号"), React.createElement("th", null, "運送会社"), React.createElement("th", null, "変更日時"), React.createElement("th", null, "ステータス"), 
-				items
+			React.createElement("table", {className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp"}, 
+				React.createElement("thead", null, 
+					React.createElement("tr", null, 
+						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
+							"伝票番号"
+						), 
+						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
+							"運送会社"
+						), 
+						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
+							"変更日時"
+						), 
+						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
+							"ステータス"
+						)
+					)
+				), 
+				React.createElement("tbody", null, 
+					items
+				)
 			)
 		);
 	}
@@ -54,10 +71,10 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 		var item = this.props.item;
 		var date = new Date(item.time);
 		return(React.createElement("tr", null, 
-			React.createElement("th", null, item.key), 
-			React.createElement("td", null, this.replaceServiceName(item.service)), 
-			React.createElement("td", null, this.formatDate(date, 'MM/DD hh:mm')), 
-			React.createElement("td", null, item.state)
+			React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
+			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
+			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.formatDate(date, 'MM/DD hh:mm')), 
+			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state)
 		));
 	}
 });
@@ -171,7 +188,8 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.setState({setting: json});
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			if(XMLHttpRequest.state != 404) {
+			console.info(XMLHttpRequest);
+			if(XMLHttpRequest.status != 404) {
 				alert(textStatus+': '+errorThrown);
 			}
 		});

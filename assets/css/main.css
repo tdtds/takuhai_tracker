@@ -5,6 +5,18 @@
  * You can modify and/or distribute this under GPL.
  */
 
+h1 {
+	color: #fff;
+	background-color: #005;
+	margin: 0px 0px 16px 0px;
+	padding: 8px;
+	text-align: center;
+}
+
+form.index {
+	text-align: center;
+}
+
 form.pushbullet input[type="text"] {
 	width: 21em;
 }

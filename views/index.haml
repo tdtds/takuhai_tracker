@@ -4,8 +4,9 @@
 		%meta{charset: 'UTF-8'}
 		%title 宅配トラッカー
 		!= stylesheet_tag 'application'
-	%body
+		%link{rel: "stylesheet", href: "//fonts.googleapis.com/icon?family=Material+Icons"}
+	%body.index
 		%h1 宅配トラッカー
-		#form
-			%form{method: 'POST', action: "/"}
-				%input{type: "submit", value: "新規利用"}
+		%form.index{method: 'POST', action: "/"}
+			%button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--colored{type: "submit"}
+				%i.material-icons<add

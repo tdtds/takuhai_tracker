@@ -18,9 +18,26 @@ var DataTable = React.createClass({
 			return(<DataColumn item={item} key={item.key} />);
 		});
 		return(
-			<table>
-				<th>伝票番号</th><th>運送会社</th><th>変更日時</th><th>ステータス</th>
-				{items}
+			<table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+				<thead>
+					<tr>
+						<th className="mdl-data-table__cell--non-numeric">
+							伝票番号
+						</th>
+						<th className="mdl-data-table__cell--non-numeric">
+							運送会社
+						</th>
+						<th className="mdl-data-table__cell--non-numeric">
+							変更日時
+						</th>
+						<th className="mdl-data-table__cell--non-numeric">
+							ステータス
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{items}
+				</tbody>
 			</table>
 		);
 	}
@@ -54,10 +71,10 @@ var DataColumn = React.createClass({
 		var item = this.props.item;
 		var date = new Date(item.time);
 		return(<tr>
-			<th>{item.key}</th>
-			<td>{this.replaceServiceName(item.service)}</td>
-			<td>{this.formatDate(date, 'MM/DD hh:mm')}</td>
-			<td>{item.state}</td>
+			<th className="mdl-data-table__cell--non-numeric">{item.key}</th>
+			<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
+			<td className="mdl-data-table__cell--non-numeric">{this.formatDate(date, 'MM/DD hh:mm')}</td>
+			<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
 		</tr>);
 	}
 });
@@ -171,7 +188,8 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.setState({setting: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			if(XMLHttpRequest.state != 404) {
+			console.info(XMLHttpRequest);
+			if(XMLHttpRequest.status != 404) {
 				alert(textStatus+': '+errorThrown);
 			}
 		});
