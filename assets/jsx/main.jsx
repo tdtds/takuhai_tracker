@@ -171,7 +171,7 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.setState({setting: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			if(XMLHttpRequest.state != 404) {
+			if(XMLHttpRequest.status != 404) {
 				alert(textStatus+': '+errorThrown);
 			}
 		});
