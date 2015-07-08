@@ -36,5 +36,10 @@ task :cron do
 		else
 			info "   not updated"
 		end
+
+		if item_new && item_new.finish?
+			info "   remove item because finished."
+			item.remove
+		end
 	end
 end
