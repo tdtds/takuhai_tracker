@@ -104,7 +104,7 @@ var Setting = React.createClass({displayName: "Setting",
 	render:function() {
 		return(React.createElement("div", null, 
 			React.createElement("h2", null, "通知設定"), 
-			React.createElement(PushbulletSetting, {apiKey: this.props.setting.pushbullet, onSubmit: this.props.onSubmit})
+			React.createElement(PushbulletSetting, {token: this.props.setting.pushbullet, onSubmit: this.props.onSubmit})
 		));
 	}
 });
@@ -114,26 +114,30 @@ var PushbulletSetting = React.createClass({displayName: "PushbulletSetting",
 		onSubmit: React.PropTypes.func.isRequired
 	},
 	getInitialState:function() {
-		return {key: ''};
+		return {token: ''};
 	},
 	componentWillReceiveProps:function(nextProps) {
-		this.setState({key: nextProps.apiKey});
+		this.setState({token: nextProps.token});
 	},
 	onChange:function(e) {
-		this.setState({key: e.target.value});
+		this.setState({token: e.target.value});
 	},
 	onClick:function(e) {
 		e.preventDefault();
-		if(this.state.key.length > 0) {
-			this.props.onSubmit(this.state.key);
-			this.setState({key: ""});
+		if(this.state.token.length > 0) {
+			this.props.onSubmit(this.state.token);
+			this.setState({token: ""});
 		};
 	},
 	render:function() {
 		return(React.createElement("form", {className: "pushbullet"}, 
-			"PushBullet API key:",  
-			React.createElement("input", {type: "text", ref: "inputKey", value: this.state.key, defaultValue: this.props.apiKey, onChange: this.onChange}), 
-			React.createElement("input", {type: "submit", value: "保存", onClick: this.onClick})
+			React.createElement("h3", null, "PushBullet"), 
+			React.createElement("div", null, 
+				"Access Token:",  
+				React.createElement("input", {type: "text", ref: "inputKey", value: this.state.token, defaultValue: this.props.token, onChange: this.onChange}), 
+				React.createElement("input", {type: "submit", value: "保存", onClick: this.onClick}), 
+				React.createElement("p", null, React.createElement("a", {href: "https://www.pushbullet.com/#settings"}, "Get your token here."))
+			)
 		));
 	}
 });

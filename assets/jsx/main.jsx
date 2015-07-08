@@ -104,7 +104,7 @@ var Setting = React.createClass({
 	render() {
 		return(<div>
 			<h2>通知設定</h2>
-			<PushbulletSetting apiKey={this.props.setting.pushbullet} onSubmit={this.props.onSubmit} />
+			<PushbulletSetting token={this.props.setting.pushbullet} onSubmit={this.props.onSubmit} />
 		</div>);
 	}
 });
@@ -114,26 +114,30 @@ var PushbulletSetting = React.createClass({
 		onSubmit: React.PropTypes.func.isRequired
 	},
 	getInitialState() {
-		return {key: ''};
+		return {token: ''};
 	},
 	componentWillReceiveProps(nextProps) {
-		this.setState({key: nextProps.apiKey});
+		this.setState({token: nextProps.token});
 	},
 	onChange(e) {
-		this.setState({key: e.target.value});
+		this.setState({token: e.target.value});
 	},
 	onClick(e) {
 		e.preventDefault();
-		if(this.state.key.length > 0) {
-			this.props.onSubmit(this.state.key);
-			this.setState({key: ""});
+		if(this.state.token.length > 0) {
+			this.props.onSubmit(this.state.token);
+			this.setState({token: ""});
 		};
 	},
 	render() {
 		return(<form className='pushbullet'>
-			PushBullet API key: 
-			<input type="text" ref="inputKey" value={this.state.key} defaultValue={this.props.apiKey} onChange={this.onChange} />
-			<input type="submit" value="保存" onClick={this.onClick} />
+			<h3>PushBullet</h3>
+			<div>
+				Access Token: 
+				<input type="text" ref="inputKey" value={this.state.token} defaultValue={this.props.token} onChange={this.onChange} />
+				<input type="submit" value="保存" onClick={this.onClick} />
+				<p><a href="https://www.pushbullet.com/#settings">Get your token here.</a></p>
+			</div>
 		</form>);
 	}
 });
