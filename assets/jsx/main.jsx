@@ -13,32 +13,46 @@ jQuery.ajaxSetup({
 });
 
 var DataTable = React.createClass({
+	propTypes: {
+		onSubmit: React.PropTypes.func.isRequired
+	},
+	getInitialState() {
+		return {enableNewItem: false};
+	},
+	onNewItem() {
+		this.setState({enableNewItem: !this.state.enableNewItem});
+	},
+	onSubmit(key) {
+		this.props.onSubmit(key);
+	},
 	render() {
 		var items = this.props.data.map((item) => {
 			return(<DataColumn item={item} key={item.key} />);
 		});
 		return(
-			<table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-				<thead>
-					<tr>
-						<th className="mdl-data-table__cell--non-numeric">
-							伝票番号
-						</th>
-						<th className="mdl-data-table__cell--non-numeric">
-							運送会社
-						</th>
-						<th className="mdl-data-table__cell--non-numeric">
-							変更日時
-						</th>
-						<th className="mdl-data-table__cell--non-numeric">
-							ステータス
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					{items}
-				</tbody>
-			</table>
+			<div className="data-table">
+				<table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+					<thead>
+						<tr>
+							<th className="mdl-data-table__cell--non-numeric">伝票番号</th>
+							<th className="mdl-data-table__cell--non-numeric">運送会社</th>
+							<th className="mdl-data-table__cell--non-numeric">変更日時</th>
+							<th className="mdl-data-table__cell--non-numeric">ステータス</th>
+						</tr>
+					</thead>
+					<tbody>
+						{items}
+						<tr className="new-item">
+							<td colSpan="4" className="mdl-data-table__cell--non-numeric">
+								<EntryItem onSubmit={this.onSubmit} enable={this.state.enableNewItem} />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button className="new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored" onClick={this.onNewItem}>
+					<i className="material-icons">{this.state.enableNewItem ? 'expand_less' : 'add'}</i>
+				</button>
+			</div>
 		);
 	}
 });
@@ -81,18 +95,13 @@ var DataColumn = React.createClass({
 
 var EntryItem = React.createClass({
 	propTypes: {
-		onSubmit:   React.PropTypes.func.isRequired,
-		submitable: React.PropTypes.bool,
+		onSubmit: React.PropTypes.func.isRequired,
+		enable:   React.PropTypes.bool.isRequired
 	},
 	getInitialState() {
 		return {key: ""};
 	},
-	getDefaultProps() {
-		return {
-			submitable: true
-		};
-	},
-	componentDidMount() {
+	componentDidUpdate(prevProps, prevState) {
 		this.refs.inputKey.getDOMNode().focus();
 	},
 	onChange(e) {
@@ -106,11 +115,16 @@ var EntryItem = React.createClass({
 		};
 	},
 	render() {
-		return(<form>
-			新しい伝票番号
-			<input ref="inputKey" value={this.state.key} onChange={this.onChange} />
-			<input type="submit" value="追加" disabled={!this.props.submitable} onClick={this.onClick} />
-		</form>);
+		var form = <form>
+				<div className="mdl-textfield mdl-js-textfield">
+					<input className="mdl-textfield__input" id="inputKey" ref="inputKey" value={this.state.key} placeholder="伝票番号..." onChange={this.onChange} />
+				</div>
+				<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
+					Add
+				</button>
+			</form>;
+
+		return(this.props.enable ? form : <span />);
 	}
 });
 
@@ -121,6 +135,7 @@ var Setting = React.createClass({
 	render() {
 		return(<div>
 			<h2>通知設定</h2>
+			<h3>PushBullet</h3>
 			<PushbulletSetting token={this.props.setting.pushbullet} onSubmit={this.props.onSubmit} />
 		</div>);
 	}
@@ -148,13 +163,13 @@ var PushbulletSetting = React.createClass({
 	},
 	render() {
 		return(<form className='pushbullet'>
-			<h3>PushBullet</h3>
-			<div>
-				Access Token: 
-				<input type="text" ref="inputKey" value={this.state.token} defaultValue={this.props.token} onChange={this.onChange} />
-				<input type="submit" value="保存" onClick={this.onClick} />
-				<p><a href="https://www.pushbullet.com/#settings">Get your token here.</a></p>
+			<div className="mdl-textfield mdl-js-textfield">
+				<input className="mdl-textfield__input" value={this.state.token} defaultValue={this.props.token} placeholder="Access Token..." onChange={this.onChange} />
 			</div>
+			<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
+				Save
+			</button>
+			<p><a href="https://www.pushbullet.com/#settings">Get your token here.</a></p>
 		</form>);
 	}
 });
@@ -224,8 +239,7 @@ var Main = React.createClass({
 	render() {
 		return(
 			<div>
-				<DataTable data={this.state.data} />
-				<EntryItem onSubmit={this.onEntryItem} submitable={this.state.submitable} />
+				<DataTable data={this.state.data} onSubmit={this.onEntryItem} />
 				<Setting setting={this.state.setting} onSubmit={this.onSetting} />
 			</div>
 		);

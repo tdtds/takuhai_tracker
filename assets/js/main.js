@@ -13,30 +13,44 @@ jQuery.ajaxSetup({
 });
 
 var DataTable = React.createClass({displayName: "DataTable",
+	propTypes: {
+		onSubmit: React.PropTypes.func.isRequired
+	},
+	getInitialState:function() {
+		return {enableNewItem: false};
+	},
+	onNewItem:function() {
+		this.setState({enableNewItem: !this.state.enableNewItem});
+	},
+	onSubmit:function(key) {
+		this.props.onSubmit(key);
+	},
 	render:function() {
 		var items = this.props.data.map(function(item)  {
 			return(React.createElement(DataColumn, {item: item, key: item.key}));
 		});
 		return(
-			React.createElement("table", {className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp"}, 
-				React.createElement("thead", null, 
-					React.createElement("tr", null, 
-						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
-							"伝票番号"
-						), 
-						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
-							"運送会社"
-						), 
-						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
-							"変更日時"
-						), 
-						React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
-							"ステータス"
+			React.createElement("div", {className: "data-table"}, 
+				React.createElement("table", {className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp"}, 
+					React.createElement("thead", null, 
+						React.createElement("tr", null, 
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "伝票番号"), 
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "運送会社"), 
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "変更日時"), 
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス")
+						)
+					), 
+					React.createElement("tbody", null, 
+						items, 
+						React.createElement("tr", {className: "new-item"}, 
+							React.createElement("td", {colSpan: "4", className: "mdl-data-table__cell--non-numeric"}, 
+								React.createElement(EntryItem, {onSubmit: this.onSubmit, enable: this.state.enableNewItem})
+							)
 						)
 					)
 				), 
-				React.createElement("tbody", null, 
-					items
+				React.createElement("button", {className: "new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored", onClick: this.onNewItem}, 
+					React.createElement("i", {className: "material-icons"}, this.state.enableNewItem ? 'expand_less' : 'add')
 				)
 			)
 		);
@@ -81,18 +95,13 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 
 var EntryItem = React.createClass({displayName: "EntryItem",
 	propTypes: {
-		onSubmit:   React.PropTypes.func.isRequired,
-		submitable: React.PropTypes.bool,
+		onSubmit: React.PropTypes.func.isRequired,
+		enable:   React.PropTypes.bool.isRequired
 	},
 	getInitialState:function() {
 		return {key: ""};
 	},
-	getDefaultProps:function() {
-		return {
-			submitable: true
-		};
-	},
-	componentDidMount:function() {
+	componentDidUpdate:function(prevProps, prevState) {
 		this.refs.inputKey.getDOMNode().focus();
 	},
 	onChange:function(e) {
@@ -106,11 +115,16 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 		};
 	},
 	render:function() {
-		return(React.createElement("form", null, 
-			"新しい伝票番号", 
-			React.createElement("input", {ref: "inputKey", value: this.state.key, onChange: this.onChange}), 
-			React.createElement("input", {type: "submit", value: "追加", disabled: !this.props.submitable, onClick: this.onClick})
-		));
+		var form = React.createElement("form", null, 
+				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
+					React.createElement("input", {className: "mdl-textfield__input", id: "inputKey", ref: "inputKey", value: this.state.key, placeholder: "伝票番号...", onChange: this.onChange})
+				), 
+				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
+					"Add"
+				)
+			);
+
+		return(this.props.enable ? form : React.createElement("span", null));
 	}
 });
 
@@ -121,6 +135,7 @@ var Setting = React.createClass({displayName: "Setting",
 	render:function() {
 		return(React.createElement("div", null, 
 			React.createElement("h2", null, "通知設定"), 
+			React.createElement("h3", null, "PushBullet"), 
 			React.createElement(PushbulletSetting, {token: this.props.setting.pushbullet, onSubmit: this.props.onSubmit})
 		));
 	}
@@ -148,13 +163,13 @@ var PushbulletSetting = React.createClass({displayName: "PushbulletSetting",
 	},
 	render:function() {
 		return(React.createElement("form", {className: "pushbullet"}, 
-			React.createElement("h3", null, "PushBullet"), 
-			React.createElement("div", null, 
-				"Access Token:",  
-				React.createElement("input", {type: "text", ref: "inputKey", value: this.state.token, defaultValue: this.props.token, onChange: this.onChange}), 
-				React.createElement("input", {type: "submit", value: "保存", onClick: this.onClick}), 
-				React.createElement("p", null, React.createElement("a", {href: "https://www.pushbullet.com/#settings"}, "Get your token here."))
-			)
+			React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
+				React.createElement("input", {className: "mdl-textfield__input", value: this.state.token, defaultValue: this.props.token, placeholder: "Access Token...", onChange: this.onChange})
+			), 
+			React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
+				"Save"
+			), 
+			React.createElement("p", null, React.createElement("a", {href: "https://www.pushbullet.com/#settings"}, "Get your token here."))
 		));
 	}
 });
@@ -224,8 +239,7 @@ var Main = React.createClass({displayName: "Main",
 	render:function() {
 		return(
 			React.createElement("div", null, 
-				React.createElement(DataTable, {data: this.state.data}), 
-				React.createElement(EntryItem, {onSubmit: this.onEntryItem, submitable: this.state.submitable}), 
+				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem}), 
 				React.createElement(Setting, {setting: this.state.setting, onSubmit: this.onSetting})
 			)
 		);
