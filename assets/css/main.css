@@ -5,6 +5,72 @@
  * You can modify and/or distribute this under GPL.
  */
 
-form.pushbullet input[type="text"] {
-	width: 21em;
+body {
+	background-color: #eee;
+}
+
+h1 {
+	color: #eee;
+	background-color: #005;
+	margin: 0px 0px 16px 0px;
+	padding: 0.3em;
+	text-align: center;
+	font-size: x-large;
+}
+
+.data-table {
+	text-align: center;
+	margin: 1em auto 0px auto;
+}
+
+.data-table table {
+	margin: 1em auto 0px auto;
+}
+
+.data-table form {
+	text-align: center;
+	margin: 0px auto 0px auto;
+	padding-bottom: 30px;
+}
+
+button.mdl-button--primary {
+	margin-left: 20px;
+}
+
+#inputKey {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+button.new-item {
+	margin-top: -28px;
+}
+
+form.pushbullet {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+form.pushbullet p {
+	font-size: small;
+	margin-top: 0px;
+}
+
+form.index {
+	text-align: center;
+}
+
+h2 {
+	color: #eee;
+	background-color: #005;
+	margin: 24px 0px 16px 0px;
+	padding: 0px;
+	text-align: center;
+	font-size: large;
+}
+
+h3 {
+	font-size: large;
+	margin: 8px 0px 0px 0px;
 }
