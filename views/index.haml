@@ -11,3 +11,9 @@
 		%form.index{method: 'POST', action: "/"}
 			%button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--colored{type: "submit"}
 				%i.material-icons<add
+		%p
+			宅配便の配送状況を定期的にチェックして、変化があったときに
+			%a{href: "https://www.pushbullet.com/"}<Pushbullet
+			で通知してくれるサービスです。現在、ヤマト運輸、佐川急便および日本郵便の3サービスに
+			対応しています。あらかじめPushbulletのAPIトークンを設定し、あとは各サービスの
+			伝票番号を入力していくだけで使えます。

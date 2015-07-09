@@ -52,6 +52,10 @@ form.index {
 	text-align: center;
 }
 
+body.index p {
+	margin: 2em;
+}
+
 h2 {
 	color: #eee;
 	background-color: #005;
