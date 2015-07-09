@@ -119,6 +119,7 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
 					React.createElement("input", {className: "mdl-textfield__input", id: "inputKey", ref: "inputKey", value: this.state.key, placeholder: "伝票番号...", onChange: this.onChange})
 				), 
+				React.createElement("br", null), 
 				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
 					"Add"
 				)
