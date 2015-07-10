@@ -11,6 +11,12 @@ task :cron do
 	Dotenv.load if ENV['RACK_ENV'] == 'production'
 	Mongoid::load!('config/mongoid.yml')
 
+	services = {
+		'JapanPost'      => '日本郵便',
+		'KuronekoYamato' => 'ヤマト運輸',
+		'Sagawa'         => '佐川急便'
+	}
+
 	TakuhaiTracker::Item.all.each do |item|
 		info "start checking #{item.key}"
 		if item.service
@@ -25,10 +31,11 @@ task :cron do
 			info "   => start state checking"
 			setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
 			if setting && setting.pushbullet
+				info "   => send notice"
 				Pushbullet.api_token = setting.pushbullet
 				Pushbullet::Contact.me.push_note(
 					"Takuhai Tracker state update",
-					"#{item.service}: #{item_new.state}\n(No.#{item.key})"
+					"#{services[item.service] || item.service}: #{item_new.state}\n(No.#{item.key})"
 				)
 			end
 
