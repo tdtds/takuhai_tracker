@@ -133,7 +133,7 @@ var Setting = React.createClass({displayName: "Setting",
 	render:function() {
 		return(React.createElement("div", null, 
 			React.createElement("h2", null, "通知設定"), 
-			React.createElement("h3", null, "PushBullet"), 
+			React.createElement("h3", null, "Pushbullet"), 
 			React.createElement(PushbulletSetting, {token: this.props.setting.pushbullet, onSubmit: this.props.onSubmit})
 		));
 	}

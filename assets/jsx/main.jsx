@@ -133,7 +133,7 @@ var Setting = React.createClass({
 	render() {
 		return(<div>
 			<h2>通知設定</h2>
-			<h3>PushBullet</h3>
+			<h3>Pushbullet</h3>
 			<PushbulletSetting token={this.props.setting.pushbullet} onSubmit={this.props.onSubmit} />
 		</div>);
 	}
