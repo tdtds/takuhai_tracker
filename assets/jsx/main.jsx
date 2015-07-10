@@ -29,6 +29,7 @@ var DataTable = React.createClass({
 		var items = this.props.data.map((item) => {
 			return(<DataColumn item={item} key={item.key} />);
 		});
+		var dummy = this.state.enableNewItem ? '' : <tr><th colSpan="4" /></tr>
 		return(
 			<div className="data-table">
 				<table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
@@ -42,13 +43,10 @@ var DataTable = React.createClass({
 					</thead>
 					<tbody>
 						{items}
-						<tr className="new-item">
-							<td colSpan="4" className="mdl-data-table__cell--non-numeric">
-								<EntryItem onSubmit={this.onSubmit} enable={this.state.enableNewItem} />
-							</td>
-						</tr>
+						{dummy}
 					</tbody>
 				</table>
+				<EntryItem onSubmit={this.onSubmit} enable={this.state.enableNewItem} />
 				<button className="new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored" onClick={this.onNewItem}>
 					<i className="material-icons">{this.state.enableNewItem ? 'expand_less' : 'add'}</i>
 				</button>
@@ -115,17 +113,16 @@ var EntryItem = React.createClass({
 		};
 	},
 	render() {
-		var form = <form>
+		var display = this.props.enable ? 'block' : 'none';
+		return(<form style={{display: display}}>
 				<div className="mdl-textfield mdl-js-textfield">
-					<input className="mdl-textfield__input" id="inputKey" ref="inputKey" value={this.state.key} placeholder="伝票番号..." onChange={this.onChange} />
+					<input className="mdl-textfield__input" ref="inputKey" value={this.state.key} placeholder="伝票番号..." onChange={this.onChange} />
 				</div>
-				<br />
 				<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
 					Add
 				</button>
-			</form>;
-
-		return(this.props.enable ? form : <span />);
+			</form>
+		);
 	}
 });
 

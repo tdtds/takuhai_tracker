@@ -29,6 +29,7 @@ var DataTable = React.createClass({displayName: "DataTable",
 		var items = this.props.data.map(function(item)  {
 			return(React.createElement(DataColumn, {item: item, key: item.key}));
 		});
+		var dummy = this.state.enableNewItem ? '' : React.createElement("tr", null, React.createElement("th", {colSpan: "4"}))
 		return(
 			React.createElement("div", {className: "data-table"}, 
 				React.createElement("table", {className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp"}, 
@@ -42,13 +43,10 @@ var DataTable = React.createClass({displayName: "DataTable",
 					), 
 					React.createElement("tbody", null, 
 						items, 
-						React.createElement("tr", {className: "new-item"}, 
-							React.createElement("td", {colSpan: "4", className: "mdl-data-table__cell--non-numeric"}, 
-								React.createElement(EntryItem, {onSubmit: this.onSubmit, enable: this.state.enableNewItem})
-							)
-						)
+						dummy
 					)
 				), 
+				React.createElement(EntryItem, {onSubmit: this.onSubmit, enable: this.state.enableNewItem}), 
 				React.createElement("button", {className: "new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored", onClick: this.onNewItem}, 
 					React.createElement("i", {className: "material-icons"}, this.state.enableNewItem ? 'expand_less' : 'add')
 				)
@@ -115,17 +113,16 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 		};
 	},
 	render:function() {
-		var form = React.createElement("form", null, 
+		var display = this.props.enable ? 'block' : 'none';
+		return(React.createElement("form", {style: {display: display}}, 
 				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
-					React.createElement("input", {className: "mdl-textfield__input", id: "inputKey", ref: "inputKey", value: this.state.key, placeholder: "伝票番号...", onChange: this.onChange})
+					React.createElement("input", {className: "mdl-textfield__input", ref: "inputKey", value: this.state.key, placeholder: "伝票番号...", onChange: this.onChange})
 				), 
-				React.createElement("br", null), 
 				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
 					"Add"
 				)
-			);
-
-		return(this.props.enable ? form : React.createElement("span", null));
+			)
+		);
 	}
 });
 
