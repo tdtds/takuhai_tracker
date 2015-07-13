@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: 17a6b159803cd003c4f5e9aa5a66145868559e01
+  revision: 2ae86b9032de49288a8cdf2389bae2d33e7966f6
   specs:
     takuhai_status (0.1.0)
       faraday
@@ -110,7 +110,7 @@ GEM
     ruby-pushbullet (0.1.3)
       json
       rest-client (~> 1.7.2)
-    sass (3.4.15)
+    sass (3.4.16)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
