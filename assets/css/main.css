@@ -69,3 +69,8 @@ h3 {
 	font-size: large;
 	margin: 8px 0px 0px 0px;
 }
+
+div.contact {
+	margin-top: 40px;
+	text-align: center;
+}
