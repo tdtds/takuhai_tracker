@@ -22,7 +22,7 @@ var DataTable = React.createClass({
 	onNewItem() {
 		this.setState({enableNewItem: !this.state.enableNewItem});
 	},
-	onRemove(key) {
+	onDelete(key) {
 		this.props.onRemove(key);
 	},
 	onSubmit(key) {
@@ -30,7 +30,7 @@ var DataTable = React.createClass({
 	},
 	render() {
 		var items = this.props.data.map((item) => {
-			return(<DataColumn item={item} key={item.key} onRemove={this.onRemove} />);
+			return(<DataColumn item={item} key={item.key} onDelete={this.onDelete} />);
 		});
 		var dummy = this.state.enableNewItem ? '' : <tr><th colSpan="4" /></tr>
 		return(
@@ -42,7 +42,6 @@ var DataTable = React.createClass({
 							<th className="mdl-data-table__cell--non-numeric">運送会社</th>
 							<th className="mdl-data-table__cell--non-numeric">変更日時</th>
 							<th className="mdl-data-table__cell--non-numeric">ステータス</th>
-							<th className="mdl-data-table__cell--non-numeric"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -85,24 +84,40 @@ var DataColumn = React.createClass({
 		format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
 		return format;
 	},
-	onClick(e) {
-		this.props.onRemove(this.props.item.key);
+	onDelete() {
+		this.props.onDelete(this.props.item.key);
 	},
 	render() {
 		var item = this.props.item;
-		var date = new Date(item.time);
-		return(<tr>
-			<th className="mdl-data-table__cell--non-numeric">{item.key}</th>
-			<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
-			<td className="mdl-data-table__cell--non-numeric">{this.formatDate(date, 'MM/DD hh:mm')}</td>
-			<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
-			<td className="mdl-data-table__cell--non-numeric">
-				<button className="mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item"
-						onClick={this.onClick}>
-					<i className="material-icons">clear</i>
-				</button>
-			</td>
-		</tr>);
+		var date = this.formatDate(new Date(item.time), 'MM/DD hh:mm');
+		if(item.service) {
+			return(<tr>
+				<th className="mdl-data-table__cell--non-numeric">{item.key}</th>
+				<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
+				<td className="mdl-data-table__cell--non-numeric">{date}</td>
+				<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
+			</tr>);
+		} else {
+			return(<tr>
+				<th className="mdl-data-table__cell--non-numeric" colSpan="4">
+					{item.key}
+					<DataDeleteButton onDelete={this.onDelete}/>
+				</th>
+			</tr>);
+		}
+	}
+});
+
+var DataDeleteButton = React.createClass({
+	onClick() {
+		this.props.onDelete();
+	},
+	render() {
+		return(
+			<button className="mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item" onClick={this.onClick}>
+				<i className="material-icons">clear</i>
+			</button>
+		);
 	}
 });
 
@@ -143,7 +158,7 @@ var EntryItem = React.createClass({
 
 var Setting = React.createClass({
 	propTypes: {
-		onSubmit:   React.PropTypes.func.isRequired,
+		onSubmit: React.PropTypes.func.isRequired,
 	},
 	render() {
 		return(<div>

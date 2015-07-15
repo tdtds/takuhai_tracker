@@ -22,7 +22,7 @@ var DataTable = React.createClass({displayName: "DataTable",
 	onNewItem:function() {
 		this.setState({enableNewItem: !this.state.enableNewItem});
 	},
-	onRemove:function(key) {
+	onDelete:function(key) {
 		this.props.onRemove(key);
 	},
 	onSubmit:function(key) {
@@ -30,7 +30,7 @@ var DataTable = React.createClass({displayName: "DataTable",
 	},
 	render:function() {
 		var items = this.props.data.map(function(item)  {
-			return(React.createElement(DataColumn, {item: item, key: item.key, onRemove: this.onRemove}));
+			return(React.createElement(DataColumn, {item: item, key: item.key, onDelete: this.onDelete}));
 		}.bind(this));
 		var dummy = this.state.enableNewItem ? '' : React.createElement("tr", null, React.createElement("th", {colSpan: "4"}))
 		return(
@@ -41,8 +41,7 @@ var DataTable = React.createClass({displayName: "DataTable",
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "伝票番号"), 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "運送会社"), 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "変更日時"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"})
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス")
 						)
 					), 
 					React.createElement("tbody", null, 
@@ -85,24 +84,40 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 		format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
 		return format;
 	},
-	onClick:function(e) {
-		this.props.onRemove(this.props.item.key);
+	onDelete:function() {
+		this.props.onDelete(this.props.item.key);
 	},
 	render:function() {
 		var item = this.props.item;
-		var date = new Date(item.time);
-		return(React.createElement("tr", null, 
-			React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
-			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
-			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.formatDate(date, 'MM/DD hh:mm')), 
-			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state), 
-			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, 
-				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item", 
-						onClick: this.onClick}, 
-					React.createElement("i", {className: "material-icons"}, "clear")
+		var date = this.formatDate(new Date(item.time), 'MM/DD hh:mm');
+		if(item.service) {
+			return(React.createElement("tr", null, 
+				React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, date), 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state)
+			));
+		} else {
+			return(React.createElement("tr", null, 
+				React.createElement("th", {className: "mdl-data-table__cell--non-numeric", colSpan: "4"}, 
+					item.key, 
+					React.createElement(DataDeleteButton, {onDelete: this.onDelete})
 				)
+			));
+		}
+	}
+});
+
+var DataDeleteButton = React.createClass({displayName: "DataDeleteButton",
+	onClick:function() {
+		this.props.onDelete();
+	},
+	render:function() {
+		return(
+			React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item", onClick: this.onClick}, 
+				React.createElement("i", {className: "material-icons"}, "clear")
 			)
-		));
+		);
 	}
 });
 
@@ -143,7 +158,7 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 
 var Setting = React.createClass({displayName: "Setting",
 	propTypes: {
-		onSubmit:	React.PropTypes.func.isRequired,
+		onSubmit: React.PropTypes.func.isRequired,
 	},
 	render:function() {
 		return(React.createElement("div", null, 
