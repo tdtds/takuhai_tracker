@@ -1,15 +1,31 @@
-# my sinatra web application skeleton
+# 宅配トラッカー
 
-A Web application skeleton mainly running on Heroku.
+宅配便の配送状況を、Pushbulletを使って通知してくれるシンプルなWebサービス
 
-using:
+## Installation
 
-* Sinatra
-* haml for view template engine
-* assets pipeline
-* Twitter OAuth by OmniAuth
-* Mongoid for storage
-* Dalli for using memcached
-* RSpec
+Getting code:
 
-before using this skeleton, ```git grep -i fixme``` and replace they to your app name.
+    $ git clone https://github.com/tdtds/takuhai_tracker.git
+	 $ cd takuhai_tracker
+
+And setting up and execute:
+
+	 $ bundle install
+	 $ bundle exec puma -C config/puma.rb
+
+Or deploy to Heroku:
+
+    $ heroku apps:create YOUR_APP_NAME
+	 $ heroku addons:add mongolab -a YOUR_APP_NAME
+    $ git push "git@heroku.com:YOUR_APP_NAME.git" master:master
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/tdtds/takuhai_tracker.
+
+
+## License
+
+The gem is available as open source under the terms of the GPL3.
+
