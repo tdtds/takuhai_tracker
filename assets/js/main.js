@@ -22,13 +22,16 @@ var DataTable = React.createClass({displayName: "DataTable",
 	onNewItem:function() {
 		this.setState({enableNewItem: !this.state.enableNewItem});
 	},
+	onRemove:function(key) {
+		this.props.onRemove(key);
+	},
 	onSubmit:function(key) {
 		this.props.onSubmit(key);
 	},
 	render:function() {
 		var items = this.props.data.map(function(item)  {
-			return(React.createElement(DataColumn, {item: item, key: item.key}));
-		});
+			return(React.createElement(DataColumn, {item: item, key: item.key, onRemove: this.onRemove}));
+		}.bind(this));
 		var dummy = this.state.enableNewItem ? '' : React.createElement("tr", null, React.createElement("th", {colSpan: "4"}))
 		return(
 			React.createElement("div", {className: "data-table"}, 
@@ -38,7 +41,8 @@ var DataTable = React.createClass({displayName: "DataTable",
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "伝票番号"), 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "運送会社"), 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "変更日時"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス")
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス"), 
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"})
 						)
 					), 
 					React.createElement("tbody", null, 
@@ -81,6 +85,9 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 		format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
 		return format;
 	},
+	onClick:function(e) {
+		this.props.onRemove(this.props.item.key);
+	},
 	render:function() {
 		var item = this.props.item;
 		var date = new Date(item.time);
@@ -88,7 +95,13 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 			React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
 			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
 			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.formatDate(date, 'MM/DD hh:mm')), 
-			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state)
+			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state), 
+			React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, 
+				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item", 
+						onClick: this.onClick}, 
+					React.createElement("i", {className: "material-icons"}, "clear")
+				)
+			)
 		));
 	}
 });
@@ -130,7 +143,7 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 
 var Setting = React.createClass({displayName: "Setting",
 	propTypes: {
-		onSubmit:   React.PropTypes.func.isRequired,
+		onSubmit:	React.PropTypes.func.isRequired,
 	},
 	render:function() {
 		return(React.createElement("div", null, 
@@ -219,6 +232,17 @@ var Main = React.createClass({displayName: "Main",
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onClearItem:function(key) {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/' + key,
+			type: 'DELETE',
+			cache: false
+		}).done(function(json)  {
+			this.updateData();
+		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
 	onSetting:function(pushbulletKey) {
 		jQuery.ajax({
 			url: '/' + this.state.user + '/setting',
@@ -238,7 +262,7 @@ var Main = React.createClass({displayName: "Main",
 	render:function() {
 		return(
 			React.createElement("div", null, 
-				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem}), 
+				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem, onRemove: this.onClearItem}), 
 				React.createElement(Setting, {setting: this.state.setting, onSubmit: this.onSetting})
 			)
 		);

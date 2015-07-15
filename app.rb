@@ -89,5 +89,13 @@ module TakuhaiTracker
 			end
 			redirect "/#{params[:user]}"
 		end
+
+		delete '/:user/:key' do
+			user = params[:user]
+			key = params[:key].gsub(/[^0-9]/, '')
+			item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
+			item.remove
+			redirect "/#{params[:user]}"
+		end
 	end
 end

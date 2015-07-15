@@ -22,12 +22,15 @@ var DataTable = React.createClass({
 	onNewItem() {
 		this.setState({enableNewItem: !this.state.enableNewItem});
 	},
+	onRemove(key) {
+		this.props.onRemove(key);
+	},
 	onSubmit(key) {
 		this.props.onSubmit(key);
 	},
 	render() {
 		var items = this.props.data.map((item) => {
-			return(<DataColumn item={item} key={item.key} />);
+			return(<DataColumn item={item} key={item.key} onRemove={this.onRemove} />);
 		});
 		var dummy = this.state.enableNewItem ? '' : <tr><th colSpan="4" /></tr>
 		return(
@@ -39,6 +42,7 @@ var DataTable = React.createClass({
 							<th className="mdl-data-table__cell--non-numeric">運送会社</th>
 							<th className="mdl-data-table__cell--non-numeric">変更日時</th>
 							<th className="mdl-data-table__cell--non-numeric">ステータス</th>
+							<th className="mdl-data-table__cell--non-numeric"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -81,6 +85,9 @@ var DataColumn = React.createClass({
 		format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
 		return format;
 	},
+	onClick(e) {
+		this.props.onRemove(this.props.item.key);
+	},
 	render() {
 		var item = this.props.item;
 		var date = new Date(item.time);
@@ -89,6 +96,12 @@ var DataColumn = React.createClass({
 			<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
 			<td className="mdl-data-table__cell--non-numeric">{this.formatDate(date, 'MM/DD hh:mm')}</td>
 			<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
+			<td className="mdl-data-table__cell--non-numeric">
+				<button className="mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item"
+						onClick={this.onClick}>
+					<i className="material-icons">clear</i>
+				</button>
+			</td>
 		</tr>);
 	}
 });
@@ -219,6 +232,17 @@ var Main = React.createClass({
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onClearItem(key) {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/' + key,
+			type: 'DELETE',
+			cache: false
+		}).done((json) => {
+			this.updateData();
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
 	onSetting(pushbulletKey) {
 		jQuery.ajax({
 			url: '/' + this.state.user + '/setting',
@@ -238,7 +262,7 @@ var Main = React.createClass({
 	render() {
 		return(
 			<div>
-				<DataTable data={this.state.data} onSubmit={this.onEntryItem} />
+				<DataTable data={this.state.data} onSubmit={this.onEntryItem} onRemove={this.onClearItem} />
 				<Setting setting={this.state.setting} onSubmit={this.onSetting} />
 			</div>
 		);
