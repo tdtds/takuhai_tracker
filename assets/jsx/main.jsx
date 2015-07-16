@@ -186,10 +186,8 @@ var PushbulletSetting = React.createClass({
 	},
 	onClick(e) {
 		e.preventDefault();
-		if(this.state.token.length > 0) {
-			this.props.onSubmit(this.state.token);
-			this.setState({token: ""});
-		};
+		this.props.onSubmit(this.state.token);
+		this.setState({token: ""});
 	},
 	render() {
 		return(<form className='pushbullet'>
