@@ -43,7 +43,11 @@ task :cron do
 				end
 			end
 
-			item.update_attributes!(time: item_new.time, state: item_new.state)
+			item.update_attributes!(
+				service: item_new.class.to_s.split(/::/).last,
+				time: item_new.time,
+				state: item_new.state
+			)
 		else
 			info "   => not updated"
 		end
