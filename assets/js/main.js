@@ -39,8 +39,8 @@ var DataTable = React.createClass({displayName: "DataTable",
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "伝票番号"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "運送会社"), 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "変更日時"), 
+							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "運送会社"), 
 							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス")
 						)
 					), 
@@ -93,16 +93,18 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 		if(item.service) {
 			return(React.createElement("tr", null, 
 				React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
 				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, date), 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
 				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state)
 			));
 		} else {
 			return(React.createElement("tr", null, 
-				React.createElement("th", {className: "mdl-data-table__cell--non-numeric", colSpan: "4"}, 
+				React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
 					item.key, 
 					React.createElement(DataDeleteButton, {onDelete: this.onDelete})
-				)
+				), 
+				React.createElement("td", {style: {"text-align": "center"}}, "-"), 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric", colSpan: "2"}, "(不明)")
 			));
 		}
 	}

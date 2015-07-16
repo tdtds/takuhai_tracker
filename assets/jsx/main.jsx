@@ -39,8 +39,8 @@ var DataTable = React.createClass({
 					<thead>
 						<tr>
 							<th className="mdl-data-table__cell--non-numeric">伝票番号</th>
-							<th className="mdl-data-table__cell--non-numeric">運送会社</th>
 							<th className="mdl-data-table__cell--non-numeric">変更日時</th>
+							<th className="mdl-data-table__cell--non-numeric">運送会社</th>
 							<th className="mdl-data-table__cell--non-numeric">ステータス</th>
 						</tr>
 					</thead>
@@ -93,16 +93,18 @@ var DataColumn = React.createClass({
 		if(item.service) {
 			return(<tr>
 				<th className="mdl-data-table__cell--non-numeric">{item.key}</th>
-				<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
 				<td className="mdl-data-table__cell--non-numeric">{date}</td>
+				<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
 				<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
 			</tr>);
 		} else {
 			return(<tr>
-				<th className="mdl-data-table__cell--non-numeric" colSpan="4">
+				<th className="mdl-data-table__cell--non-numeric">
 					{item.key}
 					<DataDeleteButton onDelete={this.onDelete}/>
 				</th>
+				<td style={{"text-align": "center"}}>-</td>
+				<td className="mdl-data-table__cell--non-numeric" colSpan="2">(不明)</td>
 			</tr>);
 		}
 	}
