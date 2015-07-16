@@ -30,7 +30,7 @@ task :cron do
 		if item_new && item.state != item_new.state
 			info "   => start state checking"
 			setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
-			if setting && setting.pushbullet
+			if setting && setting.pushbullet && !setting.pushbullet.empty?
 				info "   => send notice"
 				service_name = services[item.service] || item.service || item_new.class.to_s.split(/::/).last
 				Pushbullet.api_token = setting.pushbullet
