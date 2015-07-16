@@ -32,11 +32,12 @@ task :cron do
 			setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
 			if setting && setting.pushbullet
 				info "   => send notice"
+				service_name = services[item.service] || item.service || item_new.class.to_s.split(/::/).last
 				Pushbullet.api_token = setting.pushbullet
 				begin
 					Pushbullet::Contact.me.push_note(
 						"Takuhai Tracker state update",
-						"#{services[item.service] || item.service}: #{item_new.state}\n(No.#{item.key})"
+						"#{service_name}: #{item_new.state}\n(No.#{item.key})"
 					)
 				rescue Pushbullet::Error => e
 					$stderr.puts "#{e} #{item.user_id}/#{item.key} => #{setting.pushbullet}"
