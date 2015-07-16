@@ -73,7 +73,7 @@ module TakuhaiTracker
 
 		get '/:user/:key' do
 			user = params[:user]
-			key = params[:key].gsub(/[^0-9]/, '')
+			key = params[:key].gsub(/[^a-zA-Z0-9]/, '')
 			begin
 				service = TakuhaiStatus.scan(key)
 				item = TakuhaiTracker::Item.find_or_create_by(user_id: user, key: key)
@@ -92,7 +92,7 @@ module TakuhaiTracker
 
 		delete '/:user/:key' do
 			user = params[:user]
-			key = params[:key].gsub(/[^0-9]/, '')
+			key = params[:key].gsub(/[^a-zA-Z0-9]/, '')
 			item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
 			item.remove
 			redirect "/#{user}"
