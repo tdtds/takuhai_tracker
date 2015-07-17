@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: 0877477d1e5357d8c749088afc43e8fc877d0eda
+  revision: 21658ff778ec84839fd06707d7a938ffc38aebed
   specs:
     takuhai_status (0.1.0)
       faraday
@@ -74,7 +74,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (2.12.0)
+    puma (2.12.1)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
