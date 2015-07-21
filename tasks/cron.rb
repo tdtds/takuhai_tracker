@@ -20,8 +20,12 @@ task :cron do
 	TakuhaiTracker::Item.all.each do |item|
 		info "start checking #{item.key}"
 		if item.service
-			info "   => found existent item of #{item.service}"
-			item_new = TakuhaiStatus.const_get(item.service).new(item.key)
+			begin
+				info "   => found existent item of #{item.service}"
+				item_new = TakuhaiStatus.const_get(item.service).new(item.key)
+			rescue
+				$stderr.puts "failed getting item info: [#$!] key:#{item.key}"
+			end
 		else
 			info "   => found unhandled item"
 			item_new = TakuhaiStatus.scan(item.key) rescue nil
