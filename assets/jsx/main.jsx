@@ -92,17 +92,17 @@ var DataColumn = React.createClass({
 		var date = this.formatDate(new Date(item.time), 'MM/DD hh:mm');
 		if(item.service) {
 			return(<tr>
-				<th className="mdl-data-table__cell--non-numeric">{item.key}</th>
+				<td className="mdl-data-table__cell--non-numeric">{item.key}</td>
 				<td className="mdl-data-table__cell--non-numeric">{date}</td>
 				<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
 				<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
 			</tr>);
 		} else {
 			return(<tr>
-				<th className="mdl-data-table__cell--non-numeric">
+				<td className="mdl-data-table__cell--non-numeric">
 					{item.key}
 					<DataDeleteButton onDelete={this.onDelete}/>
-				</th>
+				</td>
 				<td style={{"text-align": "center"}}>-</td>
 				<td className="mdl-data-table__cell--non-numeric" colSpan="2">(不明)</td>
 			</tr>);

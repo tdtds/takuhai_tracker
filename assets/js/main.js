@@ -92,14 +92,14 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 		var date = this.formatDate(new Date(item.time), 'MM/DD hh:mm');
 		if(item.service) {
 			return(React.createElement("tr", null, 
-				React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
 				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, date), 
 				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
 				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state)
 			));
 		} else {
 			return(React.createElement("tr", null, 
-				React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, 
+				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, 
 					item.key, 
 					React.createElement(DataDeleteButton, {onDelete: this.onDelete})
 				), 
