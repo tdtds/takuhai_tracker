@@ -26,10 +26,24 @@ task :cron do
 				item_new = TakuhaiStatus.const_get(item.service).new(item.key)
 			rescue
 				$stderr.puts "failed getting item info: [#$!] key:#{item.key}"
+				next
 			end
 		else
 			info "   => found unhandled item"
 			item_new = TakuhaiStatus.scan(item.key) rescue nil
+			unless item_new
+				if item.time
+					# remove item after 30 days not updated
+					if ((Time.now - item.time) / (60 * 60 * 24 * 30)) > 1
+						info "   => try to remove old item"
+						$stderr.puts "try to remove old item: key:#{item.key}"
+						#item.remove
+					end
+				else
+					item.update_attributes!(time: Time.now)
+				end
+				next
+			end
 		end
 
 		if item_new && item.state != item_new.state
