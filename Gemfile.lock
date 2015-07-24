@@ -1,9 +1,10 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: def01452ff32851688fc2f3493212795972a4160
+  revision: dc12a791c4130f51a4540094b031100fa1434939
   specs:
     takuhai_status (0.1.0)
       faraday
+      faraday-cookie_jar
       mechanize
 
 GEM
@@ -36,6 +37,9 @@ GEM
     execjs (2.5.2)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
+    faraday-cookie_jar (0.0.6)
+      faraday (>= 0.7.4)
+      http-cookie (~> 1.0.0)
     haml (4.0.6)
       tilt
     hike (1.2.3)

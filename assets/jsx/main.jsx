@@ -67,6 +67,8 @@ var DataColumn = React.createClass({
 				return 'ヤマト運輸';
 			case 'Sagawa':
 				return '佐川急便';
+			case 'TMGCargo':
+				return 'TMG';
 			default:
 				return service;
 		}
