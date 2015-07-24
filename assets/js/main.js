@@ -105,7 +105,7 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 					item.key, 
 					React.createElement(DataDeleteButton, {onDelete: this.onDelete})
 				), 
-				React.createElement("td", {style: {"text-align": "center"}}, "-"), 
+				React.createElement("td", {style: {"textAlign": "center"}}, "-"), 
 				React.createElement("td", {className: "mdl-data-table__cell--non-numeric", colSpan: "2"}, "(不明)")
 			));
 		}
