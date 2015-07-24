@@ -15,6 +15,7 @@ task :cron do
 		'JapanPost'      => '日本郵便',
 		'KuronekoYamato' => 'ヤマト運輸',
 		'Sagawa'         => '佐川急便'
+		'TMGCargo'       => 'TMG'
 	}
 
 	TakuhaiTracker::Item.all.each do |item|
