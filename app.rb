@@ -74,6 +74,8 @@ module TakuhaiTracker
 		get '/:user/:key' do
 			user = params[:user]
 			key = params[:key].gsub(/[^a-zA-Z0-9]/, '')
+			return 404 unless user.size == 32
+
 			begin
 				service = TakuhaiStatus.scan(key)
 				item = TakuhaiTracker::Item.find_or_create_by(user_id: user, key: key)
