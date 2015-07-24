@@ -14,7 +14,7 @@ task :cron do
 	services = {
 		'JapanPost'      => '日本郵便',
 		'KuronekoYamato' => 'ヤマト運輸',
-		'Sagawa'         => '佐川急便'
+		'Sagawa'         => '佐川急便',
 		'TMGCargo'       => 'TMG'
 	}
 
