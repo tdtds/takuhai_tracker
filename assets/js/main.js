@@ -32,7 +32,7 @@ var DataTable = React.createClass({displayName: "DataTable",
 		var items = this.props.data.map(function(item)  {
 			return(React.createElement(DataColumn, {item: item, key: item.key, onDelete: this.onDelete}));
 		}.bind(this));
-		var dummy = this.state.enableNewItem ? '' : React.createElement("tr", null, React.createElement("th", {colSpan: "4"}))
+		var dummy = this.state.enableNewItem ? React.createElement("tr", {style: {height: 0}}) : React.createElement("tr", null, React.createElement("th", {colSpan: "4"}))
 		return(
 			React.createElement("div", {className: "data-table"}, 
 				React.createElement("table", {className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp"}, 

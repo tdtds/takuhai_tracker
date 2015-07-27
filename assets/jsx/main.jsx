@@ -32,7 +32,7 @@ var DataTable = React.createClass({
 		var items = this.props.data.map((item) => {
 			return(<DataColumn item={item} key={item.key} onDelete={this.onDelete} />);
 		});
-		var dummy = this.state.enableNewItem ? '' : <tr><th colSpan="4" /></tr>
+		var dummy = this.state.enableNewItem ? <tr style={{height: 0}} /> : <tr><th colSpan="4" /></tr>
 		return(
 			<div className="data-table">
 				<table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
