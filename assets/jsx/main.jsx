@@ -14,7 +14,8 @@ jQuery.ajaxSetup({
 
 var DataTable = React.createClass({
 	propTypes: {
-		onSubmit: React.PropTypes.func.isRequired
+		onSubmit:    React.PropTypes.func.isRequired,
+		busyNewItem: React.PropTypes.bool.isRequired
 	},
 	getInitialState() {
 		return {enableNewItem: false};
@@ -49,7 +50,7 @@ var DataTable = React.createClass({
 						{dummy}
 					</tbody>
 				</table>
-				<EntryItem onSubmit={this.onSubmit} enable={this.state.enableNewItem} />
+				<EntryItem onSubmit={this.onSubmit} enable={this.state.enableNewItem} busy={this.props.busyNewItem} />
 				<button className="new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored" onClick={this.onNewItem}>
 					<i className="material-icons">{this.state.enableNewItem ? 'expand_less' : 'add'}</i>
 				</button>
@@ -128,7 +129,8 @@ var DataDeleteButton = React.createClass({
 var EntryItem = React.createClass({
 	propTypes: {
 		onSubmit: React.PropTypes.func.isRequired,
-		enable:   React.PropTypes.bool.isRequired
+		enable:   React.PropTypes.bool.isRequired,
+		busy:     React.PropTypes.bool.isRequired
 	},
 	getInitialState() {
 		return {key: ""};
@@ -147,12 +149,13 @@ var EntryItem = React.createClass({
 		};
 	},
 	render() {
+		console.info(this.props.busy);
 		var display = this.props.enable ? 'block' : 'none';
 		return(<form style={{display: display}}>
 				<div className="mdl-textfield mdl-js-textfield">
 					<input className="mdl-textfield__input" ref="inputKey" value={this.state.key} placeholder="伝票番号..." onChange={this.onChange} />
 				</div>
-				<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
+				<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick} disabled={this.props.busy}>
 					Add
 				</button>
 			</form>
@@ -209,7 +212,8 @@ var Main = React.createClass({
 		return {
 			user: jQuery('#main').attr('data-user'),
 			data: [],
-			setting: {}
+			setting: {},
+			busy: false
 		};
 	},
 	updateData() {
@@ -239,13 +243,16 @@ var Main = React.createClass({
 		});
 	},
 	onEntryItem(key) {
+		this.setState({busy: true});
 		jQuery.ajax({
 			url: '/' + this.state.user,
 			type: 'POST',
 			data: {key: key}
 		}).done((json) => {
+			this.setState({busy: false});
 			this.updateData();
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			this.setState({busy: false});
 			alert(textStatus+': '+errorThrown);
 		});
 	},
@@ -279,7 +286,7 @@ var Main = React.createClass({
 	render() {
 		return(
 			<div>
-				<DataTable data={this.state.data} onSubmit={this.onEntryItem} onRemove={this.onClearItem} />
+				<DataTable data={this.state.data} onSubmit={this.onEntryItem} onRemove={this.onClearItem} busyNewItem={this.state.busy} />
 				<Setting setting={this.state.setting} onSubmit={this.onSetting} />
 			</div>
 		);

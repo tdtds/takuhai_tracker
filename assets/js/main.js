@@ -14,7 +14,8 @@ jQuery.ajaxSetup({
 
 var DataTable = React.createClass({displayName: "DataTable",
 	propTypes: {
-		onSubmit: React.PropTypes.func.isRequired
+		onSubmit:    React.PropTypes.func.isRequired,
+		busyNewItem: React.PropTypes.bool.isRequired
 	},
 	getInitialState:function() {
 		return {enableNewItem: false};
@@ -49,7 +50,7 @@ var DataTable = React.createClass({displayName: "DataTable",
 						dummy
 					)
 				), 
-				React.createElement(EntryItem, {onSubmit: this.onSubmit, enable: this.state.enableNewItem}), 
+				React.createElement(EntryItem, {onSubmit: this.onSubmit, enable: this.state.enableNewItem, busy: this.props.busyNewItem}), 
 				React.createElement("button", {className: "new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored", onClick: this.onNewItem}, 
 					React.createElement("i", {className: "material-icons"}, this.state.enableNewItem ? 'expand_less' : 'add')
 				)
@@ -128,7 +129,8 @@ var DataDeleteButton = React.createClass({displayName: "DataDeleteButton",
 var EntryItem = React.createClass({displayName: "EntryItem",
 	propTypes: {
 		onSubmit: React.PropTypes.func.isRequired,
-		enable:   React.PropTypes.bool.isRequired
+		enable:   React.PropTypes.bool.isRequired,
+		busy:     React.PropTypes.bool.isRequired
 	},
 	getInitialState:function() {
 		return {key: ""};
@@ -147,12 +149,13 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 		};
 	},
 	render:function() {
+		console.info(this.props.busy);
 		var display = this.props.enable ? 'block' : 'none';
 		return(React.createElement("form", {style: {display: display}}, 
 				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
 					React.createElement("input", {className: "mdl-textfield__input", ref: "inputKey", value: this.state.key, placeholder: "伝票番号...", onChange: this.onChange})
 				), 
-				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
+				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick, disabled: this.props.busy}, 
 					"Add"
 				)
 			)
@@ -209,7 +212,8 @@ var Main = React.createClass({displayName: "Main",
 		return {
 			user: jQuery('#main').attr('data-user'),
 			data: [],
-			setting: {}
+			setting: {},
+			busy: false
 		};
 	},
 	updateData:function() {
@@ -239,15 +243,18 @@ var Main = React.createClass({displayName: "Main",
 		});
 	},
 	onEntryItem:function(key) {
+		this.setState({busy: true});
 		jQuery.ajax({
 			url: '/' + this.state.user,
 			type: 'POST',
 			data: {key: key}
 		}).done(function(json)  {
+			this.setState({busy: false});
 			this.updateData();
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			this.setState({busy: false});
 			alert(textStatus+': '+errorThrown);
-		});
+		}.bind(this));
 	},
 	onClearItem:function(key) {
 		jQuery.ajax({
@@ -279,7 +286,7 @@ var Main = React.createClass({displayName: "Main",
 	render:function() {
 		return(
 			React.createElement("div", null, 
-				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem, onRemove: this.onClearItem}), 
+				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem, onRemove: this.onClearItem, busyNewItem: this.state.busy}), 
 				React.createElement(Setting, {setting: this.state.setting, onSubmit: this.onSetting})
 			)
 		);
