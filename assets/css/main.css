@@ -52,8 +52,13 @@ form.index {
 	text-align: center;
 }
 
+body.index p, body.user p {
+	max-width: 50em;
+	margin: 1em auto 1em auto;
+}
+
 body.index p {
-	margin: 2em;
+	margin-top: 2em;
 }
 
 h2 {
