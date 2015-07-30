@@ -205,7 +205,6 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 		};
 	},
 	render:function() {
-		console.info(this.props.busy);
 		var display = this.props.enable ? 'block' : 'none';
 		return(React.createElement("form", {style: {display: display}}, 
 				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
