@@ -27,6 +27,14 @@ h1 {
 	margin: 1em auto 0px auto;
 }
 
+.data-table table .multi-row{
+	vertical-align: middle;
+}
+
+.data-table table .multi-col{
+	padding-left: 18px;
+}
+
 .data-table form {
 	text-align: center;
 	margin: 0px auto 0px auto;
