@@ -49,12 +49,12 @@ var DataTable = React.createClass({
 		if(smartPhone){
 			header = <thead>
 				<tr>
-					<th className={headerClass} rowSpan="2">伝票番号</th>
+					<th className={headerClass + ' multi-row'} rowSpan="2">伝票番号</th>
 					<th className={headerClass}>変更日時</th>
 					<th className={headerClass}>運送会社</th>
 				</tr>
 				<tr>
-					<th className={headerClass} colSpan="2">ステータス</th>
+					<th className={headerClass + ' multi-col'} colSpan="2">ステータス</th>
 				</tr>
 			</thead>;
 		}else{
@@ -123,12 +123,12 @@ var DataColumn = React.createClass({
 			return(smartPhone ?
 				<tbody>
 					<tr>
-						<td className={className} rowSpan="2">{item.key}</td>
+						<td className={className + ' multi-row'} rowSpan="2">{item.key}</td>
 						<td className={className}>{date}</td>
 						<td className={className}>{this.replaceServiceName(item.service)}</td>
 					</tr>
 					<tr>
-						<td className={className} colSpan="2">{item.state}</td>
+						<td className={className + ' multi-col'} colSpan="2">{item.state}</td>
 					</tr>
 				</tbody>
 				:

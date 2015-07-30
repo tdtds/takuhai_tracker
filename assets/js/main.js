@@ -49,12 +49,12 @@ var DataTable = React.createClass({displayName: "DataTable",
 		if(smartPhone){
 			header = React.createElement("thead", null, 
 				React.createElement("tr", null, 
-					React.createElement("th", {className: headerClass, rowSpan: "2"}, "伝票番号"), 
+					React.createElement("th", {className: headerClass + ' multi-row', rowSpan: "2"}, "伝票番号"), 
 					React.createElement("th", {className: headerClass}, "変更日時"), 
 					React.createElement("th", {className: headerClass}, "運送会社")
 				), 
 				React.createElement("tr", null, 
-					React.createElement("th", {className: headerClass, colSpan: "2"}, "ステータス")
+					React.createElement("th", {className: headerClass + ' multi-col', colSpan: "2"}, "ステータス")
 				)
 			);
 		}else{
@@ -123,12 +123,12 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 			return(smartPhone ?
 				React.createElement("tbody", null, 
 					React.createElement("tr", null, 
-						React.createElement("td", {className: className, rowSpan: "2"}, item.key), 
+						React.createElement("td", {className: className + ' multi-row', rowSpan: "2"}, item.key), 
 						React.createElement("td", {className: className}, date), 
 						React.createElement("td", {className: className}, this.replaceServiceName(item.service))
 					), 
 					React.createElement("tr", null, 
-						React.createElement("td", {className: className, colSpan: "2"}, item.state)
+						React.createElement("td", {className: className + ' multi-col', colSpan: "2"}, item.state)
 					)
 				)
 				:
