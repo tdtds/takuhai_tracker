@@ -30,25 +30,49 @@ var DataTable = React.createClass({
 		this.props.onSubmit(key);
 	},
 	render() {
+		var smartPhone = screen.availWidth <= 360 ? true : false;
 		var items = this.props.data.map((item) => {
-			return(<DataColumn item={item} key={item.key} onDelete={this.onDelete} />);
+			return(<DataColumn
+				item={item}
+				key={item.key}
+				onDelete={this.onDelete}
+				smartPhone={smartPhone}
+			/>);
 		});
-		var dummy = this.state.enableNewItem ? <tr style={{height: 0}} /> : <tr><th colSpan="4" /></tr>
+		var headerClass = "mdl-data-table__cell--non-numeric";
+		var header;
+		var dummy = this.state.enableNewItem ?
+			<tbody><tr style={{height: 0}} /></tbody>
+			:
+			<tbody><tr><th colSpan={smartPhone ? 3 : 4} /></tr></tbody>
+
+		if(smartPhone){
+			header = <thead>
+				<tr>
+					<th className={headerClass} rowSpan="2">伝票番号</th>
+					<th className={headerClass}>変更日時</th>
+					<th className={headerClass}>運送会社</th>
+				</tr>
+				<tr>
+					<th className={headerClass} colSpan="2">ステータス</th>
+				</tr>
+			</thead>;
+		}else{
+			header = <thead>
+				<tr>
+					<th className={headerClass}>伝票番号</th>
+					<th className={headerClass}>変更日時</th>
+					<th className={headerClass}>運送会社</th>
+					<th className={headerClass}>ステータス</th>
+				</tr>
+			</thead>;
+		}
 		return(
 			<div className="data-table">
 				<table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-					<thead>
-						<tr>
-							<th className="mdl-data-table__cell--non-numeric">伝票番号</th>
-							<th className="mdl-data-table__cell--non-numeric">変更日時</th>
-							<th className="mdl-data-table__cell--non-numeric">運送会社</th>
-							<th className="mdl-data-table__cell--non-numeric">ステータス</th>
-						</tr>
-					</thead>
-					<tbody>
-						{items}
-						{dummy}
-					</tbody>
+					{header}
+					{items}
+					{dummy}
 				</table>
 				<EntryItem onSubmit={this.onSubmit} enable={this.state.enableNewItem} busy={this.props.busyNewItem} />
 				<button className="new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored" onClick={this.onNewItem}>
@@ -92,23 +116,55 @@ var DataColumn = React.createClass({
 	},
 	render() {
 		var item = this.props.item;
+		var smartPhone = this.props.smartPhone;
 		var date = this.formatDate(new Date(item.time), 'MM/DD hh:mm');
+		var className = "mdl-data-table__cell--non-numeric";
 		if(item.service) {
-			return(<tr>
-				<td className="mdl-data-table__cell--non-numeric">{item.key}</td>
-				<td className="mdl-data-table__cell--non-numeric">{date}</td>
-				<td className="mdl-data-table__cell--non-numeric">{this.replaceServiceName(item.service)}</td>
-				<td className="mdl-data-table__cell--non-numeric">{item.state}</td>
-			</tr>);
+			return(smartPhone ?
+				<tbody>
+					<tr>
+						<td className={className} rowSpan="2">{item.key}</td>
+						<td className={className}>{date}</td>
+						<td className={className}>{this.replaceServiceName(item.service)}</td>
+					</tr>
+					<tr>
+						<td className={className} colSpan="2">{item.state}</td>
+					</tr>
+				</tbody>
+				:
+				<tbody>
+					<tr>
+						<td className={className} rowSpan="1">{item.key}</td>
+						<td className={className}>{date}</td>
+						<td className={className}>{this.replaceServiceName(item.service)}</td>
+						<td className={className}>{item.state}</td>
+					</tr>
+				</tbody>
+			);
 		} else {
-			return(<tr>
-				<td className="mdl-data-table__cell--non-numeric">
-					{item.key}
-					<DataDeleteButton onDelete={this.onDelete}/>
-				</td>
-				<td style={{"textAlign": "center"}}>-</td>
-				<td className="mdl-data-table__cell--non-numeric" colSpan="2">(不明)</td>
-			</tr>);
+			return(smartPhone ?
+				<tbody>
+					<tr>
+						<td className={className}>
+							{item.key}
+							<DataDeleteButton onDelete={this.onDelete}/>
+						</td>
+						<td style={{"textAlign": "center"}}>-</td>
+						<td className={className}>(不明)</td>
+					</tr>
+				</tbody>
+				:
+				<tbody>
+					<tr>
+						<td className={className}>
+							{item.key}
+							<DataDeleteButton onDelete={this.onDelete}/>
+						</td>
+						<td style={{"textAlign": "center"}}>-</td>
+						<td className={className} colSpan="2">(不明)</td>
+					</tr>
+				</tbody>
+			);
 		}
 	}
 });

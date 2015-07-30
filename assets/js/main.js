@@ -30,25 +30,49 @@ var DataTable = React.createClass({displayName: "DataTable",
 		this.props.onSubmit(key);
 	},
 	render:function() {
+		var smartPhone = screen.availWidth <= 360 ? true : false;
 		var items = this.props.data.map(function(item)  {
-			return(React.createElement(DataColumn, {item: item, key: item.key, onDelete: this.onDelete}));
+			return(React.createElement(DataColumn, {
+				item: item, 
+				key: item.key, 
+				onDelete: this.onDelete, 
+				smartPhone: smartPhone}
+			));
 		}.bind(this));
-		var dummy = this.state.enableNewItem ? React.createElement("tr", {style: {height: 0}}) : React.createElement("tr", null, React.createElement("th", {colSpan: "4"}))
+		var headerClass = "mdl-data-table__cell--non-numeric";
+		var header;
+		var dummy = this.state.enableNewItem ?
+			React.createElement("tbody", null, React.createElement("tr", {style: {height: 0}}))
+			:
+			React.createElement("tbody", null, React.createElement("tr", null, React.createElement("th", {colSpan: smartPhone ? 3 : 4})))
+
+		if(smartPhone){
+			header = React.createElement("thead", null, 
+				React.createElement("tr", null, 
+					React.createElement("th", {className: headerClass, rowSpan: "2"}, "伝票番号"), 
+					React.createElement("th", {className: headerClass}, "変更日時"), 
+					React.createElement("th", {className: headerClass}, "運送会社")
+				), 
+				React.createElement("tr", null, 
+					React.createElement("th", {className: headerClass, colSpan: "2"}, "ステータス")
+				)
+			);
+		}else{
+			header = React.createElement("thead", null, 
+				React.createElement("tr", null, 
+					React.createElement("th", {className: headerClass}, "伝票番号"), 
+					React.createElement("th", {className: headerClass}, "変更日時"), 
+					React.createElement("th", {className: headerClass}, "運送会社"), 
+					React.createElement("th", {className: headerClass}, "ステータス")
+				)
+			);
+		}
 		return(
 			React.createElement("div", {className: "data-table"}, 
 				React.createElement("table", {className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp"}, 
-					React.createElement("thead", null, 
-						React.createElement("tr", null, 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "伝票番号"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "変更日時"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "運送会社"), 
-							React.createElement("th", {className: "mdl-data-table__cell--non-numeric"}, "ステータス")
-						)
-					), 
-					React.createElement("tbody", null, 
-						items, 
-						dummy
-					)
+					header, 
+					items, 
+					dummy
 				), 
 				React.createElement(EntryItem, {onSubmit: this.onSubmit, enable: this.state.enableNewItem, busy: this.props.busyNewItem}), 
 				React.createElement("button", {className: "new-item mdl-button mdl-js-button mdl-button--fab mdl-button--colored", onClick: this.onNewItem}, 
@@ -92,23 +116,55 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 	},
 	render:function() {
 		var item = this.props.item;
+		var smartPhone = this.props.smartPhone;
 		var date = this.formatDate(new Date(item.time), 'MM/DD hh:mm');
+		var className = "mdl-data-table__cell--non-numeric";
 		if(item.service) {
-			return(React.createElement("tr", null, 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.key), 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, date), 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, this.replaceServiceName(item.service)), 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, item.state)
-			));
+			return(smartPhone ?
+				React.createElement("tbody", null, 
+					React.createElement("tr", null, 
+						React.createElement("td", {className: className, rowSpan: "2"}, item.key), 
+						React.createElement("td", {className: className}, date), 
+						React.createElement("td", {className: className}, this.replaceServiceName(item.service))
+					), 
+					React.createElement("tr", null, 
+						React.createElement("td", {className: className, colSpan: "2"}, item.state)
+					)
+				)
+				:
+				React.createElement("tbody", null, 
+					React.createElement("tr", null, 
+						React.createElement("td", {className: className, rowSpan: "1"}, item.key), 
+						React.createElement("td", {className: className}, date), 
+						React.createElement("td", {className: className}, this.replaceServiceName(item.service)), 
+						React.createElement("td", {className: className}, item.state)
+					)
+				)
+			);
 		} else {
-			return(React.createElement("tr", null, 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric"}, 
-					item.key, 
-					React.createElement(DataDeleteButton, {onDelete: this.onDelete})
-				), 
-				React.createElement("td", {style: {"textAlign": "center"}}, "-"), 
-				React.createElement("td", {className: "mdl-data-table__cell--non-numeric", colSpan: "2"}, "(不明)")
-			));
+			return(smartPhone ?
+				React.createElement("tbody", null, 
+					React.createElement("tr", null, 
+						React.createElement("td", {className: className}, 
+							item.key, 
+							React.createElement(DataDeleteButton, {onDelete: this.onDelete})
+						), 
+						React.createElement("td", {style: {"textAlign": "center"}}, "-"), 
+						React.createElement("td", {className: className}, "(不明)")
+					)
+				)
+				:
+				React.createElement("tbody", null, 
+					React.createElement("tr", null, 
+						React.createElement("td", {className: className}, 
+							item.key, 
+							React.createElement(DataDeleteButton, {onDelete: this.onDelete})
+						), 
+						React.createElement("td", {style: {"textAlign": "center"}}, "-"), 
+						React.createElement("td", {className: className, colSpan: "2"}, "(不明)")
+					)
+				)
+			);
 		}
 	}
 });
