@@ -208,7 +208,8 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 		var display = this.props.enable ? 'block' : 'none';
 		return(React.createElement("form", {style: {display: display}}, 
 				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
-					React.createElement("input", {className: "mdl-textfield__input", ref: "inputKey", value: this.state.key, placeholder: "伝票番号...", onChange: this.onChange})
+					React.createElement("input", {className: "mdl-textfield__input", id: "entry-item_input", ref: "inputKey", value: this.state.key, onChange: this.onChange}), 
+					React.createElement("label", {className: "mdl-textfield__label", htmlFor: "entry-item_input"}, "伝票番号...")
 				), 
 				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick, disabled: this.props.busy}, 
 					"Add"

@@ -208,7 +208,8 @@ var EntryItem = React.createClass({
 		var display = this.props.enable ? 'block' : 'none';
 		return(<form style={{display: display}}>
 				<div className="mdl-textfield mdl-js-textfield">
-					<input className="mdl-textfield__input" ref="inputKey" value={this.state.key} placeholder="伝票番号..." onChange={this.onChange} />
+					<input className="mdl-textfield__input" id="entry-item_input" ref="inputKey" value={this.state.key} onChange={this.onChange} />
+					<label className="mdl-textfield__label" htmlFor="entry-item_input">伝票番号...</label>
 				</div>
 				<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick} disabled={this.props.busy}>
 					Add
