@@ -19,5 +19,10 @@
 			あらかじめPushbulletのAPIトークンを設定し、あとは各サービスの
 			伝票番号を入力していくだけで使えます。
 		%div.contact
-			%a{href: "https://github.com/tdtds/takuhai_tracker"}
+			%a.pushbullet-subscribe-widget{"data-channel"=>"takuhai_tracker", "data-widget"=>"button", "data-size"=>"small"}<
+				%script{type: "text/javascript"}
+					(function(){var a=document.createElement('script');a.type='text/javascript';a.async=true;a.src='https://widget.pushbullet.com/embed.js';var b=document.getElementsByTagName('script')[0];b.parentNode.insertBefore(a,b);})();
+			%a{href: "https://www.facebook.com/takuhaitracker"}<
+				%img{src: "img/facebook.png", alt: "Contact us via Facebook"}
+			%a{href: "https://github.com/tdtds/takuhai_tracker"}<
 				%img{src: "img/github.png", alt: "Contact us via GitHub"}

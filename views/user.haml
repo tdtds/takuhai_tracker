@@ -12,4 +12,8 @@
 			このページはあなた専用です。ブックマークしておくことで再利用できます。
 			このURLを他人に教えないよう注意して下さい。
 		#main{"data-user": user}
+		%div.contact
+			%a.pushbullet-subscribe-widget{"data-channel"=>"takuhai_tracker", "data-widget"=>"button", "data-size"=>"small"}<
+				%script{type: "text/javascript"}
+					(function(){var a=document.createElement('script');a.type='text/javascript';a.async=true;a.src='https://widget.pushbullet.com/embed.js';var b=document.getElementsByTagName('script')[0];b.parentNode.insertBefore(a,b);})();
 		!= javascript_tag 'application'
