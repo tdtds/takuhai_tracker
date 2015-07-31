@@ -223,7 +223,9 @@ var Memo = React.createClass({
 		this.setState({memo: e.target.value});
 	},
 	onFinish(){
-		this.props.onMemo(this.state.memo);
+		if (this.props.memo != this.state.memo) {
+			this.props.onMemo(this.state.memo);
+		}
 		this.setState({edit: false});
 	},
 	onKeyDown(e) {
