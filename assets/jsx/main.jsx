@@ -211,7 +211,9 @@ var Memo = React.createClass({
 	},
 	componentDidUpdate(prevProps, prevState) {
 		if(!prevState.edit && this.state.edit){
-			this.refs.memoInput.getDOMNode().focus();
+			var input = this.refs.memoInput.getDOMNode();
+			input.focus();
+			input.selectionStart = input.selectionEnd = input.value.length;
 		}
 	},
 	onClick() {
