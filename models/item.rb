@@ -14,5 +14,6 @@ module TakuhaiTracker
 		validates_presence_of :key, allow_nil: false
 		field :time, type: Time
 		field :state, type: String
+		field :memo, type: String
 	end
 end

@@ -35,10 +35,22 @@ h1 {
 	padding-left: 18px;
 }
 
-.data-table form {
+.data-table form.entry-item {
 	text-align: center;
 	margin: 0px auto 0px auto;
 	padding-bottom: 30px;
+}
+
+.fake-mdl_textfield_input {
+	background-color: transparent;
+	border-width: 0px 0px 2px 0px;
+	border-color: rgba(0, 0, 0, 0.12);
+	padding: 2px;
+	width: 100%;
+}
+.fake-mdl_textfield_input:focus {
+	outline-style: none;
+	border-color: #3f51b5; 
 }
 
 button.new-item {

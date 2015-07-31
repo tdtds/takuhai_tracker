@@ -99,5 +99,15 @@ module TakuhaiTracker
 			item.remove
 			redirect "/#{user}"
 		end
+
+		put '/:user/:key' do
+			user = params[:user]
+			key = params[:key].gsub(/[^a-zA-Z0-9]/, '')
+			item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
+			return 404 unless item
+
+			item.update_attributes!(memo: params[:memo]) if params[:memo]
+			return 200
+		end
 	end
 end
