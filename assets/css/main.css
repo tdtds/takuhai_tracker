@@ -72,7 +72,11 @@ form.index {
 	text-align: center;
 }
 
-body.index p, body.user p {
+body {
+	margin-bottom: 50px;
+}
+
+body p {
 	max-width: 50em;
 	margin: 1em auto 1em auto;
 }
@@ -102,6 +106,7 @@ div.contact {
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
+	width: 100%;
 	padding: 8px;
 	background-color: #ddd;
 }
