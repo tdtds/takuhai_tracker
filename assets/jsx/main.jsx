@@ -323,14 +323,14 @@ var PushbulletSetting = React.createClass({
 		this.setState({token: ""});
 	},
 	render() {
-		return(<form className='pushbullet'>
+		return(<form className='notify pushbullet'>
+			<p>Pushbulletを使って状況を通知します。以下にPushbulletのAccess Tokenを入力して下さい。Access Tokenは<a href="https://www.pushbullet.com/#settings">こちら</a>から入手できます。</p>
 			<div className="mdl-textfield mdl-js-textfield">
 				<input className="mdl-textfield__input" value={this.state.token} defaultValue={this.props.token} placeholder="Access Token..." onChange={this.onChange} />
 			</div>
 			<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
 				Save
 			</button>
-			<p><a href="https://www.pushbullet.com/#settings">Get your token here.</a></p>
 		</form>);
 	}
 });

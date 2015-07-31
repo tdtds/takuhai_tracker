@@ -323,14 +323,14 @@ var PushbulletSetting = React.createClass({displayName: "PushbulletSetting",
 		this.setState({token: ""});
 	},
 	render:function() {
-		return(React.createElement("form", {className: "pushbullet"}, 
+		return(React.createElement("form", {className: "notify pushbullet"}, 
+			React.createElement("p", null, "Pushbulletを使って状況を通知します。以下にPushbulletのAccess Tokenを入力して下さい。Access Tokenは", React.createElement("a", {href: "https://www.pushbullet.com/#settings"}, "こちら"), "から入手できます。"), 
 			React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
 				React.createElement("input", {className: "mdl-textfield__input", value: this.state.token, defaultValue: this.props.token, placeholder: "Access Token...", onChange: this.onChange})
 			), 
 			React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
 				"Save"
-			), 
-			React.createElement("p", null, React.createElement("a", {href: "https://www.pushbullet.com/#settings"}, "Get your token here."))
+			)
 		));
 	}
 });

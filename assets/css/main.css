@@ -57,13 +57,14 @@ button.new-item {
 	margin-top: -28px;
 }
 
-form.pushbullet {
+form.notify {
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-form.pushbullet p {
+form.notify p {
+	text-align: left;
 	font-size: small;
 	margin-top: 0px;
 }
