@@ -14,8 +14,10 @@ jQuery.ajaxSetup({
 
 var DataTable = React.createClass({displayName: "DataTable",
 	propTypes: {
-		onSubmit:    React.PropTypes.func.isRequired,
-		busyNewItem: React.PropTypes.bool.isRequired
+		onRemove:     React.PropTypes.func.isRequired,
+		onUpdateMemo: React.PropTypes.func.isRequired,
+		onSubmit:     React.PropTypes.func.isRequired,
+		busyNewItem:  React.PropTypes.bool.isRequired
 	},
 	getInitialState:function() {
 		return {enableNewItem: false};
@@ -26,16 +28,20 @@ var DataTable = React.createClass({displayName: "DataTable",
 	onDelete:function(key) {
 		this.props.onRemove(key);
 	},
+	onMemo:function(key, memo) {
+		this.props.onUpdateMemo(key, memo);
+	},
 	onSubmit:function(key) {
 		this.props.onSubmit(key);
 	},
 	render:function() {
-		var smartPhone = screen.availWidth <= 360 ? true : false;
+		var smartPhone = $(window).width() <= 360 ? true : false;
 		var items = this.props.data.map(function(item)  {
 			return(React.createElement(DataColumn, {
 				item: item, 
 				key: item.key, 
 				onDelete: this.onDelete, 
+				onMemo: this.onMemo, 
 				smartPhone: smartPhone}
 			));
 		}.bind(this));
@@ -49,12 +55,9 @@ var DataTable = React.createClass({displayName: "DataTable",
 		if(smartPhone){
 			header = React.createElement("thead", null, 
 				React.createElement("tr", null, 
-					React.createElement("th", {className: headerClass + ' multi-row', rowSpan: "2"}, "伝票番号"), 
+					React.createElement("th", {className: headerClass}, "伝票番号"), 
 					React.createElement("th", {className: headerClass}, "変更日時"), 
 					React.createElement("th", {className: headerClass}, "運送会社")
-				), 
-				React.createElement("tr", null, 
-					React.createElement("th", {className: headerClass + ' multi-col', colSpan: "2"}, "ステータス")
 				)
 			);
 		}else{
@@ -84,6 +87,10 @@ var DataTable = React.createClass({displayName: "DataTable",
 });
 
 var DataColumn = React.createClass({displayName: "DataColumn",
+	propTypes: {
+		onDelete: React.PropTypes.func.isRequired,
+		onMemo:   React.PropTypes.func.isRequired
+	},
 	replaceServiceName:function(service) {
 		switch(service) {
 			case 'JapanPost':
@@ -114,6 +121,9 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 	onDelete:function() {
 		this.props.onDelete(this.props.item.key);
 	},
+	onMemo:function(memo) {
+		this.props.onMemo(this.props.item.key, memo);
+	},
 	render:function() {
 		var item = this.props.item;
 		var smartPhone = this.props.smartPhone;
@@ -123,46 +133,50 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 			return(smartPhone ?
 				React.createElement("tbody", null, 
 					React.createElement("tr", null, 
-						React.createElement("td", {className: className + ' multi-row', rowSpan: "2"}, item.key), 
+						React.createElement("td", {className: className + ' multi-row', rowSpan: "3"}, item.key), 
 						React.createElement("td", {className: className}, date), 
 						React.createElement("td", {className: className}, this.replaceServiceName(item.service))
 					), 
 					React.createElement("tr", null, 
 						React.createElement("td", {className: className + ' multi-col', colSpan: "2"}, item.state)
-					)
+					), 
+					React.createElement(Memo, {colSpan: "2", memo: item.memo, onMemo: this.onMemo})
 				)
 				:
 				React.createElement("tbody", null, 
 					React.createElement("tr", null, 
-						React.createElement("td", {className: className, rowSpan: "1"}, item.key), 
+						React.createElement("td", {className: className + ' multi-row', rowSpan: "2"}, item.key), 
 						React.createElement("td", {className: className}, date), 
 						React.createElement("td", {className: className}, this.replaceServiceName(item.service)), 
 						React.createElement("td", {className: className}, item.state)
-					)
+					), 
+					React.createElement(Memo, {colSpan: "3", memo: item.memo, onMemo: this.onMemo})
 				)
 			);
 		} else {
 			return(smartPhone ?
 				React.createElement("tbody", null, 
 					React.createElement("tr", null, 
-						React.createElement("td", {className: className}, 
+						React.createElement("td", {className: className + ' multi-row', rowSpan: "2"}, 
 							item.key, 
 							React.createElement(DataDeleteButton, {onDelete: this.onDelete})
 						), 
 						React.createElement("td", {style: {"textAlign": "center"}}, "-"), 
 						React.createElement("td", {className: className}, "(不明)")
-					)
+					), 
+					React.createElement(Memo, {colSpan: "2", memo: item.memo, onMemo: this.onMemo})
 				)
 				:
 				React.createElement("tbody", null, 
 					React.createElement("tr", null, 
-						React.createElement("td", {className: className}, 
+						React.createElement("td", {className: className + ' multi-row', rowSpan: "2"}, 
 							item.key, 
 							React.createElement(DataDeleteButton, {onDelete: this.onDelete})
 						), 
 						React.createElement("td", {style: {"textAlign": "center"}}, "-"), 
 						React.createElement("td", {className: className, colSpan: "2"}, "(不明)")
-					)
+					), 
+					React.createElement(Memo, {colSpan: "3", memo: item.memo, onMemo: this.onMemo})
 				)
 			);
 		}
@@ -170,6 +184,9 @@ var DataColumn = React.createClass({displayName: "DataColumn",
 });
 
 var DataDeleteButton = React.createClass({displayName: "DataDeleteButton",
+	propTypes: {
+		onDelete: React.PropTypes.func.isRequired
+	},
 	onClick:function() {
 		this.props.onDelete();
 	},
@@ -178,6 +195,61 @@ var DataDeleteButton = React.createClass({displayName: "DataDeleteButton",
 			React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item", onClick: this.onClick}, 
 				React.createElement("i", {className: "material-icons"}, "clear")
 			)
+		);
+	}
+});
+
+var Memo = React.createClass({displayName: "Memo",
+	propTypes: {
+		onMemo: React.PropTypes.func.isRequired
+	},
+	getInitialState:function() {
+		return {
+			memo: this.props.memo,
+			edit: false
+		};
+	},
+	componentDidUpdate:function(prevProps, prevState) {
+		if(!prevState.edit && this.state.edit){
+			var input = this.refs.memoInput.getDOMNode();
+			input.focus();
+			input.selectionStart = input.selectionEnd = input.value.length;
+		}
+	},
+	onClick:function() {
+		this.setState({memo: this.props.memo, edit: true});
+	},
+	onChange:function(e) {
+		this.setState({memo: e.target.value});
+	},
+	onFinish:function(){
+		if (this.props.memo != this.state.memo) {
+			this.props.onMemo(this.state.memo);
+		}
+		this.setState({edit: false});
+	},
+	onKeyDown:function(e) {
+		if (e.keyCode == 13) { // enter
+			e.preventDefault();
+			this.onFinish();
+		}
+	},
+	render:function() {
+		var className = "mdl-data-table__cell--non-numeric multi-col";
+		var show = React.createElement("div", null, 
+				this.props.memo, 
+				React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--icon mdl-button--colored", onClick: this.onClick}, 
+					React.createElement("i", {className: "material-icons"}, "mode_edit")
+				)
+			);
+		var edit = React.createElement("form", null, 
+				React.createElement("input", {className: "fake-mdl_textfield_input", id: "memo-input", ref: "memoInput", value: this.state.memo, onChange: this.onChange, onKeyDown: this.onKeyDown, onBlur: this.onFinish})
+			);
+
+		return(
+			React.createElement("tr", null, React.createElement("td", {className: className, colSpan: this.props.colSpan}, 
+				this.state.edit ? edit : show
+			))
 		);
 	}
 });
@@ -206,7 +278,7 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 	},
 	render:function() {
 		var display = this.props.enable ? 'block' : 'none';
-		return(React.createElement("form", {style: {display: display}}, 
+		return(React.createElement("form", {className: "entry-item", style: {display: display}}, 
 				React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
 					React.createElement("input", {className: "mdl-textfield__input", id: "entry-item_input", ref: "inputKey", value: this.state.key, onChange: this.onChange}), 
 					React.createElement("label", {className: "mdl-textfield__label", htmlFor: "entry-item_input"}, "伝票番号...")
@@ -323,6 +395,17 @@ var Main = React.createClass({displayName: "Main",
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onUpdateMemo:function(key, memo) {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/' + key,
+			type: 'PUT',
+			data: {memo: memo}
+		}).done(function(json)  {
+			this.updateData();
+		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
 	onSetting:function(pushbulletKey) {
 		jQuery.ajax({
 			url: '/' + this.state.user + '/setting',
@@ -342,7 +425,7 @@ var Main = React.createClass({displayName: "Main",
 	render:function() {
 		return(
 			React.createElement("div", null, 
-				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem, onRemove: this.onClearItem, busyNewItem: this.state.busy}), 
+				React.createElement(DataTable, {data: this.state.data, onSubmit: this.onEntryItem, onRemove: this.onClearItem, onUpdateMemo: this.onUpdateMemo, busyNewItem: this.state.busy}), 
 				React.createElement(Setting, {setting: this.state.setting, onSubmit: this.onSetting})
 			)
 		);

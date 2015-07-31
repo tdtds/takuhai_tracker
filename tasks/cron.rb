@@ -52,12 +52,14 @@ task :cron do
 			if setting && setting.pushbullet && !setting.pushbullet.empty?
 				info "   => send notice"
 				service_name = services[item.service] || item.service || item_new.class.to_s.split(/::/).last
-				Pushbullet.api_token = setting.pushbullet
+				body = if item && item.memo && !item.memo.empty?
+					"#{item_new.state}\n(#{item.memo})"
+				else
+					item_new.state
+				end
 				begin
-					Pushbullet::Contact.me.push_note(
-						"Takuhai Tracker state update",
-						"#{service_name}: #{item_new.state}\n(No.#{item.key})"
-					)
+					Pushbullet.api_token = setting.pushbullet
+					Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
 				rescue Pushbullet::Error => e
 					$stderr.puts "#{e} #{item.user_id}/#{item.key} => #{setting.pushbullet}"
 				end

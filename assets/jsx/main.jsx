@@ -14,8 +14,10 @@ jQuery.ajaxSetup({
 
 var DataTable = React.createClass({
 	propTypes: {
-		onSubmit:    React.PropTypes.func.isRequired,
-		busyNewItem: React.PropTypes.bool.isRequired
+		onRemove:     React.PropTypes.func.isRequired,
+		onUpdateMemo: React.PropTypes.func.isRequired,
+		onSubmit:     React.PropTypes.func.isRequired,
+		busyNewItem:  React.PropTypes.bool.isRequired
 	},
 	getInitialState() {
 		return {enableNewItem: false};
@@ -26,16 +28,20 @@ var DataTable = React.createClass({
 	onDelete(key) {
 		this.props.onRemove(key);
 	},
+	onMemo(key, memo) {
+		this.props.onUpdateMemo(key, memo);
+	},
 	onSubmit(key) {
 		this.props.onSubmit(key);
 	},
 	render() {
-		var smartPhone = screen.availWidth <= 360 ? true : false;
+		var smartPhone = $(window).width() <= 360 ? true : false;
 		var items = this.props.data.map((item) => {
 			return(<DataColumn
 				item={item}
 				key={item.key}
 				onDelete={this.onDelete}
+				onMemo={this.onMemo}
 				smartPhone={smartPhone}
 			/>);
 		});
@@ -49,12 +55,9 @@ var DataTable = React.createClass({
 		if(smartPhone){
 			header = <thead>
 				<tr>
-					<th className={headerClass + ' multi-row'} rowSpan="2">伝票番号</th>
+					<th className={headerClass}>伝票番号</th>
 					<th className={headerClass}>変更日時</th>
 					<th className={headerClass}>運送会社</th>
-				</tr>
-				<tr>
-					<th className={headerClass + ' multi-col'} colSpan="2">ステータス</th>
 				</tr>
 			</thead>;
 		}else{
@@ -84,6 +87,10 @@ var DataTable = React.createClass({
 });
 
 var DataColumn = React.createClass({
+	propTypes: {
+		onDelete: React.PropTypes.func.isRequired,
+		onMemo:   React.PropTypes.func.isRequired
+	},
 	replaceServiceName(service) {
 		switch(service) {
 			case 'JapanPost':
@@ -114,6 +121,9 @@ var DataColumn = React.createClass({
 	onDelete() {
 		this.props.onDelete(this.props.item.key);
 	},
+	onMemo(memo) {
+		this.props.onMemo(this.props.item.key, memo);
+	},
 	render() {
 		var item = this.props.item;
 		var smartPhone = this.props.smartPhone;
@@ -123,46 +133,50 @@ var DataColumn = React.createClass({
 			return(smartPhone ?
 				<tbody>
 					<tr>
-						<td className={className + ' multi-row'} rowSpan="2">{item.key}</td>
+						<td className={className + ' multi-row'} rowSpan="3">{item.key}</td>
 						<td className={className}>{date}</td>
 						<td className={className}>{this.replaceServiceName(item.service)}</td>
 					</tr>
 					<tr>
 						<td className={className + ' multi-col'} colSpan="2">{item.state}</td>
 					</tr>
+					<Memo colSpan="2" memo={item.memo} onMemo={this.onMemo} />
 				</tbody>
 				:
 				<tbody>
 					<tr>
-						<td className={className} rowSpan="1">{item.key}</td>
+						<td className={className + ' multi-row'} rowSpan="2">{item.key}</td>
 						<td className={className}>{date}</td>
 						<td className={className}>{this.replaceServiceName(item.service)}</td>
 						<td className={className}>{item.state}</td>
 					</tr>
+					<Memo colSpan="3" memo={item.memo} onMemo={this.onMemo} />
 				</tbody>
 			);
 		} else {
 			return(smartPhone ?
 				<tbody>
 					<tr>
-						<td className={className}>
+						<td className={className + ' multi-row'} rowSpan="2">
 							{item.key}
 							<DataDeleteButton onDelete={this.onDelete}/>
 						</td>
 						<td style={{"textAlign": "center"}}>-</td>
 						<td className={className}>(不明)</td>
 					</tr>
+					<Memo colSpan="2" memo={item.memo} onMemo={this.onMemo} />
 				</tbody>
 				:
 				<tbody>
 					<tr>
-						<td className={className}>
+						<td className={className + ' multi-row'} rowSpan="2">
 							{item.key}
 							<DataDeleteButton onDelete={this.onDelete}/>
 						</td>
 						<td style={{"textAlign": "center"}}>-</td>
 						<td className={className} colSpan="2">(不明)</td>
 					</tr>
+					<Memo colSpan="3" memo={item.memo} onMemo={this.onMemo} />
 				</tbody>
 			);
 		}
@@ -170,6 +184,9 @@ var DataColumn = React.createClass({
 });
 
 var DataDeleteButton = React.createClass({
+	propTypes: {
+		onDelete: React.PropTypes.func.isRequired
+	},
 	onClick() {
 		this.props.onDelete();
 	},
@@ -178,6 +195,61 @@ var DataDeleteButton = React.createClass({
 			<button className="mdl-button mdl-js-button mdl-button--icon mdl-button--colored remove-item" onClick={this.onClick}>
 				<i className="material-icons">clear</i>
 			</button>
+		);
+	}
+});
+
+var Memo = React.createClass({
+	propTypes: {
+		onMemo: React.PropTypes.func.isRequired
+	},
+	getInitialState() {
+		return {
+			memo: this.props.memo,
+			edit: false
+		};
+	},
+	componentDidUpdate(prevProps, prevState) {
+		if(!prevState.edit && this.state.edit){
+			var input = this.refs.memoInput.getDOMNode();
+			input.focus();
+			input.selectionStart = input.selectionEnd = input.value.length;
+		}
+	},
+	onClick() {
+		this.setState({memo: this.props.memo, edit: true});
+	},
+	onChange(e) {
+		this.setState({memo: e.target.value});
+	},
+	onFinish(){
+		if (this.props.memo != this.state.memo) {
+			this.props.onMemo(this.state.memo);
+		}
+		this.setState({edit: false});
+	},
+	onKeyDown(e) {
+		if (e.keyCode == 13) { // enter
+			e.preventDefault();
+			this.onFinish();
+		}
+	},
+	render() {
+		var className = "mdl-data-table__cell--non-numeric multi-col";
+		var show = <div>
+				{this.props.memo}
+				<button className="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onClick={this.onClick}>
+					<i className="material-icons">mode_edit</i>
+				</button>
+			</div>;
+		var edit = <form>
+				<input className="fake-mdl_textfield_input" id="memo-input" ref="memoInput" value={this.state.memo} onChange={this.onChange} onKeyDown={this.onKeyDown} onBlur={this.onFinish} />
+			</form>;
+
+		return(
+			<tr><td className={className} colSpan={this.props.colSpan}>
+				{this.state.edit ? edit : show}
+			</td></tr>
 		);
 	}
 });
@@ -206,7 +278,7 @@ var EntryItem = React.createClass({
 	},
 	render() {
 		var display = this.props.enable ? 'block' : 'none';
-		return(<form style={{display: display}}>
+		return(<form className="entry-item" style={{display: display}}>
 				<div className="mdl-textfield mdl-js-textfield">
 					<input className="mdl-textfield__input" id="entry-item_input" ref="inputKey" value={this.state.key} onChange={this.onChange} />
 					<label className="mdl-textfield__label" htmlFor="entry-item_input">伝票番号...</label>
@@ -323,6 +395,17 @@ var Main = React.createClass({
 			alert(textStatus+': '+errorThrown);
 		});
 	},
+	onUpdateMemo(key, memo) {
+		jQuery.ajax({
+			url: '/' + this.state.user + '/' + key,
+			type: 'PUT',
+			data: {memo: memo}
+		}).done((json) => {
+			this.updateData();
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			alert(textStatus+': '+errorThrown);
+		});
+	},
 	onSetting(pushbulletKey) {
 		jQuery.ajax({
 			url: '/' + this.state.user + '/setting',
@@ -342,7 +425,7 @@ var Main = React.createClass({
 	render() {
 		return(
 			<div>
-				<DataTable data={this.state.data} onSubmit={this.onEntryItem} onRemove={this.onClearItem} busyNewItem={this.state.busy} />
+				<DataTable data={this.state.data} onSubmit={this.onEntryItem} onRemove={this.onClearItem} onUpdateMemo={this.onUpdateMemo} busyNewItem={this.state.busy} />
 				<Setting setting={this.state.setting} onSubmit={this.onSetting} />
 			</div>
 		);
