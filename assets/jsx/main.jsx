@@ -353,7 +353,7 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.setState({data: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	updateSetting() {
@@ -366,7 +366,7 @@ var Main = React.createClass({
 			this.setState({setting: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
 			if(XMLHttpRequest.status != 404) {
-				alert(textStatus+': '+errorThrown);
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 			}
 		});
 	},
@@ -381,7 +381,11 @@ var Main = React.createClass({
 			this.updateData();
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
 			this.setState({busy: false});
-			alert(textStatus+': '+errorThrown);
+			if (XMLHttpRequest.status == 409) {
+				alert('重複する伝票番号は登録できません。この伝票は誰か他の人が追跡中です。');
+			} else {
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+			}
 		});
 	},
 	onClearItem(key) {
@@ -392,7 +396,7 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.updateData();
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	onUpdateMemo(key, memo) {
@@ -403,7 +407,7 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.updateData();
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	onSetting(pushbulletKey) {
@@ -415,7 +419,7 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.setState({setting: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	componentDidMount() {

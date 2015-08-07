@@ -353,7 +353,7 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.setState({data: json});
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	updateSetting:function() {
@@ -366,7 +366,7 @@ var Main = React.createClass({displayName: "Main",
 			this.setState({setting: json});
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
 			if(XMLHttpRequest.status != 404) {
-				alert(textStatus+': '+errorThrown);
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 			}
 		});
 	},
@@ -381,7 +381,11 @@ var Main = React.createClass({displayName: "Main",
 			this.updateData();
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
 			this.setState({busy: false});
-			alert(textStatus+': '+errorThrown);
+			if (XMLHttpRequest.status == 409) {
+				alert('重複する伝票番号は登録できません。この伝票は誰か他の人が追跡中です。');
+			} else {
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+			}
 		}.bind(this));
 	},
 	onClearItem:function(key) {
@@ -392,7 +396,7 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.updateData();
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	onUpdateMemo:function(key, memo) {
@@ -403,7 +407,7 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.updateData();
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	onSetting:function(pushbulletKey) {
@@ -415,7 +419,7 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.setState({setting: json});
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			alert(textStatus+': '+errorThrown);
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
 	componentDidMount:function() {

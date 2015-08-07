@@ -88,6 +88,8 @@ module TakuhaiTracker
 				if key.length >= 12
 					TakuhaiTracker::Item.find_or_create_by(user_id: params[:user], key: key)
 				end
+			rescue Mongoid::Errors::Validations
+				return 409, "dupulicated key"
 			end
 			redirect "/#{user}"
 		end
