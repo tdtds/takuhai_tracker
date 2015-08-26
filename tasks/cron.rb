@@ -37,7 +37,7 @@ task :cron do
 					if ((Time.now - item.time) / (60 * 60 * 24 * 30)) > 1
 						info "   => try to remove old item"
 						$stderr.puts "try to remove old item: key:#{item.key}"
-						#item.remove
+						item.remove
 					end
 				else
 					item.update_attributes!(time: Time.now)
