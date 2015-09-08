@@ -396,7 +396,11 @@ var Main = React.createClass({
 		}).done((json) => {
 			this.updateData();
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+			if (XMLHttpRequest.status == 404) {
+				this.updateData();
+			} else {
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+			}
 		});
 	},
 	onUpdateMemo(key, memo) {

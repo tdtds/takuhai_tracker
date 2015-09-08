@@ -396,8 +396,12 @@ var Main = React.createClass({displayName: "Main",
 		}).done(function(json)  {
 			this.updateData();
 		}.bind(this)).fail(function(XMLHttpRequest, textStatus, errorThrown)  {
-			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
-		});
+			if (XMLHttpRequest.status == 404) {
+				this.updateData();
+			} else {
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+			}
+		}.bind(this));
 	},
 	onUpdateMemo:function(key, memo) {
 		jQuery.ajax({

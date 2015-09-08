@@ -97,7 +97,11 @@ module TakuhaiTracker
 		delete '/:user/:key' do
 			user = params[:user]
 			key = params[:key].gsub(/[^a-zA-Z0-9]/, '')
-			item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
+			begin
+				item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
+			rescue Mongoid::Errors::DocumentNotFound
+				return 404
+			end
 			item.remove
 			redirect "/#{user}"
 		end
