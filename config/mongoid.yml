@@ -1,12 +1,12 @@
 production:
-  sessions:
+  clients:
     default:
       uri: <%= ENV['MONGOLAB_URI'] || ENV['MONGOHQ_URL'] %>
 development:
-  sessions:
+  clients:
     default:
       uri: mongodb://localhost:27017/takuhai_tracker
 test:
-  sessions:
+  clients:
     default:
       uri: mongodb://localhost:27017/takuhai_tracker
