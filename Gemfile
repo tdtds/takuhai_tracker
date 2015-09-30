@@ -10,7 +10,7 @@ gem 'yui-compressor'
 
 gem 'puma'
 gem 'haml', require: 'haml'
-gem 'mongoid', '~> 4.0', require: 'mongoid'
+gem 'mongoid', "~> 5.0", require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'
 gem 'dotenv'
