@@ -23,6 +23,7 @@ module TakuhaiTracker
 		enable :sessions
 		configure do
 			Mongoid::load!('config/mongoid.yml')
+			Mongo::Logger.info = Logger::FATAL
 		end
 
 		get '/' do
