@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: d686d33fa78bacee0c4e069df4793d47012c097c
+  revision: a36d965c54e00a926697f99ed3957f0f738e0a55
   specs:
-    takuhai_status (1.1.1)
+    takuhai_status (1.1.2)
       faraday
       faraday-cookie_jar
       mechanize
