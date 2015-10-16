@@ -60,6 +60,8 @@ task :cron do
 				begin
 					Pushbullet.api_token = setting.pushbullet
 					Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
+				rescue Encoding::InvalidByteSequenceError
+					# ignore JSON parse error in pushbullet gem
 				rescue StandardError => e
 					$stderr.puts "#{e.class}:#{e} #{item.user_id}/#{item.key} => #{setting.pushbullet}"
 					next
