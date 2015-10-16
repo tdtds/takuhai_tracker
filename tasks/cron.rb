@@ -60,8 +60,8 @@ task :cron do
 				begin
 					Pushbullet.api_token = setting.pushbullet
 					Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
-				rescue Pushbullet::Error => e
-					$stderr.puts "#{e} #{item.user_id}/#{item.key} => #{setting.pushbullet}"
+				rescue StandardError => e
+					$stderr.puts "#{e.class}:#{e} #{item.user_id}/#{item.key} => #{setting.pushbullet}"
 				end
 			end
 
