@@ -62,6 +62,7 @@ task :cron do
 					Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
 				rescue StandardError => e
 					$stderr.puts "#{e.class}:#{e} #{item.user_id}/#{item.key} => #{setting.pushbullet}"
+					next
 				end
 			end
 
