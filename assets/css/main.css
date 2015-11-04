@@ -69,6 +69,24 @@ form.notify p {
 	margin-top: 0px;
 }
 
+div.notify-icon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+div.notify-icon i.check_circle {
+	color: green;
+}
+
+div.notify-icon i.error {
+	color: red;
+}
+
+form.notify div.message {
+	font-size: small;
+}
+
 form.index {
 	text-align: center;
 }

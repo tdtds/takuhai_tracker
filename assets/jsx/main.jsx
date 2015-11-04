@@ -293,13 +293,44 @@ var EntryItem = React.createClass({
 
 var Setting = React.createClass({
 	propTypes: {
-		onSubmit: React.PropTypes.func.isRequired,
+		user: React.PropTypes.string.isRequired
+	},
+	getInitialState() {
+		return {
+			setting: {}
+		};
+	},
+	componentDidMount() {
+		jQuery.ajax({
+			url: '/' + this.props.user + '/setting.json',
+			type: 'GET',
+			dataType: 'json',
+			cache: false
+		}).done((json) => {
+			this.setState({setting: json});
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			if(XMLHttpRequest.status != 404) {
+				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+			}
+		});
+	},
+	setPushbulletToken(token) {
+		jQuery.ajax({
+			url: '/' + this.props.user + '/setting',
+			type: 'POST',
+			dataType: 'json',
+			data: {pushbullet: token, mail: ''}
+		}).done((json) => {
+			this.setState({setting: json});
+		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
+			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
+		});
 	},
 	render() {
 		return(<div>
 			<h2>通知設定</h2>
 			<h3>Pushbullet</h3>
-			<PushbulletSetting token={this.props.setting.pushbullet} onSubmit={this.props.onSubmit} />
+			<PushbulletSetting token={this.state.setting.pushbullet} validation={this.state.setting.pushbullet_validation} onSubmit={this.setPushbulletToken} />
 		</div>);
 	}
 });
@@ -323,14 +354,22 @@ var PushbulletSetting = React.createClass({
 		this.setState({token: ""});
 	},
 	render() {
+		var validation = <i className="material-icons check_circle">check_circle</i>;
+		var message = '';
+		if (!this.props.validation) {
+			validation = <i className="material-icons error">error</i>;
+			message = 'Access Tokenが指定されていないか、正しくない可能性があります。';
+		}
 		return(<form className='notify pushbullet'>
 			<p>Pushbulletを使って状況を通知します。以下にPushbulletのAccess Tokenを入力して下さい。Access Tokenは<a href="https://www.pushbullet.com/#settings">こちら</a>から入手できます。</p>
+			<div className="notify-icon">{validation}</div>
 			<div className="mdl-textfield mdl-js-textfield">
 				<input className="mdl-textfield__input" value={this.state.token} defaultValue={this.props.token} placeholder="Access Token..." onChange={this.onChange} />
 			</div>
 			<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
 				Save
 			</button>
+			<div className="message">{message}</div>
 		</form>);
 	}
 });
@@ -340,7 +379,6 @@ var Main = React.createClass({
 		return {
 			user: jQuery('#main').attr('data-user'),
 			data: [],
-			setting: {},
 			busy: false
 		};
 	},
@@ -354,20 +392,6 @@ var Main = React.createClass({
 			this.setState({data: json});
 		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
 			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
-		});
-	},
-	updateSetting() {
-		jQuery.ajax({
-			url: '/' + this.state.user + '/setting.json',
-			type: 'GET',
-			dataType: 'json',
-			cache: false
-		}).done((json) => {
-			this.setState({setting: json});
-		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			if(XMLHttpRequest.status != 404) {
-				alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
-			}
 		});
 	},
 	onEntryItem(key) {
@@ -414,27 +438,14 @@ var Main = React.createClass({
 			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
 		});
 	},
-	onSetting(pushbulletKey) {
-		jQuery.ajax({
-			url: '/' + this.state.user + '/setting',
-			type: 'POST',
-			dataType: 'json',
-			data: {pushbullet: pushbulletKey, mail: ''}
-		}).done((json) => {
-			this.setState({setting: json});
-		}).fail((XMLHttpRequest, textStatus, errorThrown) => {
-			alert(XMLHttpRequest.responseText + '(' + XMLHttpRequest.status + ')');
-		});
-	},
 	componentDidMount() {
 		this.updateData();
-		this.updateSetting();
 	},
 	render() {
 		return(
 			<div>
 				<DataTable data={this.state.data} onSubmit={this.onEntryItem} onRemove={this.onClearItem} onUpdateMemo={this.onUpdateMemo} busyNewItem={this.state.busy} />
-				<Setting setting={this.state.setting} onSubmit={this.onSetting} />
+				<Setting user={this.state.user} />
 			</div>
 		);
 	}

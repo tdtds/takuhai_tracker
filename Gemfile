@@ -14,7 +14,7 @@ gem 'mongoid', "~> 5.0", require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'
 gem 'dotenv'
-gem 'ruby-pushbullet'
+gem 'ruby-pushbullet', require: 'pushbullet'
 
 gem 'takuhai_status', github: 'tdtds/takuhai_status', require: 'takuhai_status'
 

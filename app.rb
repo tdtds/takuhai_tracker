@@ -26,6 +26,16 @@ module TakuhaiTracker
 			Mongo::Logger.level = Logger::FATAL
 		end
 
+		def pushbullet_valid?(token)
+			begin
+				Pushbullet.api_token = token
+				Pushbullet::Contact.me
+				return true
+			rescue
+				return false
+			end
+		end
+
 		get '/' do
 			haml :index
 		end
@@ -55,6 +65,7 @@ module TakuhaiTracker
 			unless setting
 				return 404, 'Document not Found'
 			else
+				setting['pushbullet_validation'] = pushbullet_valid?(setting.pushbullet)
 				return setting.to_json
 			end
 		end
@@ -69,6 +80,8 @@ module TakuhaiTracker
 				pushbullet: pushbullet,
 				mail: mail
 			)
+
+			setting['pushbullet_validation'] = pushbullet_valid?(pushbullet)
 			return setting.to_json
 		end
 
