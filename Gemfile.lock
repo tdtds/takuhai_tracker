@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: 6c35d4b8237681c399169e45a8cc48df345a1d69
+  revision: 8293bb4a00aaa584ce2d6cfd715f9093bb9763f6
   specs:
-    takuhai_status (1.2.0)
+    takuhai_status (1.3.0)
       faraday
       faraday-cookie_jar
       mechanize
@@ -59,7 +59,7 @@ GEM
       ntlm-http (~> 0.1, >= 0.1.1)
       webrobots (>= 0.0.9, < 0.2)
     method_source (0.8.2)
-    mime-types (2.6.2)
+    mime-types (2.99)
     mini_portile (0.6.2)
     minitest (5.8.3)
     mongo (2.1.2)
@@ -74,7 +74,7 @@ GEM
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
     netrc (0.11.0)
-    nokogiri (1.6.6.3)
+    nokogiri (1.6.6.4)
       mini_portile (~> 0.6.0)
     ntlm-http (0.1.1)
     origin (2.1.1)
@@ -91,7 +91,7 @@ GEM
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     rails-assets-jquery (2.1.4)
-    rails-assets-react (0.14.2)
+    rails-assets-react (0.14.3)
     rake (10.4.2)
     react-jsx-sprockets (0.2.2)
       execjs (>= 1.2.9)
@@ -105,7 +105,7 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.0)
+    rspec-core (3.4.1)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -113,7 +113,7 @@ GEM
     rspec-mocks (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
-    rspec-support (3.4.0)
+    rspec-support (3.4.1)
     ruby-pushbullet (0.1.3)
       json
       rest-client (~> 1.7.2)
