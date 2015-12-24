@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: e26290c41ace194f42d020fd27aca37ce9c32811
+  revision: fb29b57dcd8e48ba0af1eea56d4aace008e9a235
   specs:
     takuhai_status (1.3.1)
       faraday
@@ -64,7 +64,7 @@ GEM
     minitest (5.8.3)
     mongo (2.2.1)
       bson (~> 4.0)
-    mongoid (5.0.1)
+    mongoid (5.0.2)
       activemodel (~> 4.0)
       mongo (~> 2.1)
       origin (~> 2.1)
