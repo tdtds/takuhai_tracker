@@ -91,7 +91,7 @@ GEM
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     rails-assets-jquery (2.1.4)
-    rails-assets-react (0.14.4)
+    rails-assets-react (0.14.6)
     rake (10.4.2)
     react-jsx-sprockets (0.2.2)
       execjs (>= 1.2.9)
@@ -161,7 +161,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
-    webrobots (0.1.1)
+    webrobots (0.1.2)
     yajl-ruby (1.2.1)
     yui-compressor (0.12.0)
 
