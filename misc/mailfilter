@@ -1,8 +1,8 @@
 if ( /^From:.*ship-confirm@amazon.co.jp/ )
 {
-	cc "| post-takuhai-tracker"
+	cc "| ruby post-takuhai-tracker YOUR_USER_ID"
 }
-if ( /^From:.*otodoke@yodobashi.com/ )
+if ( /otodoke@yodobashi.com/ )
 {
-	cc "| post-takuhai-tracker"
+	cc "| ruby post-takuhai-tracker YOUR_USER_ID"
 }

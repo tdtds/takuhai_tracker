@@ -10,9 +10,9 @@ require 'open-uri'
 def scan_item(mail)
 	case mail
 	when /お問い合わせ伝票番号は(:?.*)です。/ #amazon
-		return $1.flatten.first
+		return $1
 	when /配達受付番号（伝票番号）：(:?\d+)/  #yodobashi
-		return $1.flatten.first
+		return $1
 	end
 	raise StandardError
 end
