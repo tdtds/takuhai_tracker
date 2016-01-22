@@ -37,7 +37,11 @@ module TakuhaiTracker::Task
 				send_notice(item, status)
 			rescue StandardError => e
 				$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
-				return
+
+				# retry next chance without error about inactive user
+				unless e.message =~ /Account has not been used for over a month/
+					return
+				end
 			end
 
 			begin
