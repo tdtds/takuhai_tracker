@@ -22,12 +22,8 @@ module TakuhaiTracker::Task
 		begin
 			status = get_recent_status(item)
 		rescue ItemNotFound => e
-			unless item.time
-				# save 1st checking timestamp
-				item.update_attributes!(time: Time.now)
-			else
-				$stderr.puts "Item not found (#{e}) #{item.user_id}/#{item.key}"
-			end
+			# save 1st checking timestamp to countdown for expire
+			item.update_attributes!(time: Time.now) unless item.time
 			return
 		rescue ItemExpired
 			info "   => try to remove old item"
