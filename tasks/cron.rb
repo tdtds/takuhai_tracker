@@ -26,7 +26,7 @@ module TakuhaiTracker::Task
 				# save 1st checking timestamp
 				item.update_attributes!(time: Time.now)
 			else
-				$stderr.puts e.message
+				$stderr.puts "Item not found (#{e}) #{item.user_id}/#{item.key}"
 			end
 			return
 		rescue ItemExpired
@@ -36,23 +36,25 @@ module TakuhaiTracker::Task
 			return
 		end
 
-		begin
-			send_notice(item, status)
-		rescue StandardError => e
-			$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
-			return
-		end
+		if item.state != status.state
+			begin
+				send_notice(item, status)
+			rescue StandardError => e
+				$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+				return
+			end
 
-		begin
-			update_item(item, status) if item.state != status.state
-		rescue StandardError => e
-			$stderr.puts "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
-			return
-		end
+			begin
+				update_item(item, status)
+			rescue StandardError => e
+				$stderr.puts "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+				return
+			end
 
-		if status.finish?
-			info "   => remove item because finished."
-			item.remove
+			if status.finish?
+				info "   => remove item because finished."
+				item.remove
+			end
 		end
 	end
 
@@ -72,7 +74,7 @@ module TakuhaiTracker::Task
 				if item.time && ((Time.now - item.time) / (60 * 60 * 24 * 30)) > 1
 					raise ItemExpired.new
 				end
-				raise ItemNotFound.new()
+				raise ItemNotFound.new('')
 			end
 			return status
 		end
