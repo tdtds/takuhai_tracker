@@ -50,11 +50,11 @@ module TakuhaiTracker::Task
 				$stderr.puts "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 				return
 			end
+		end
 
-			if status.finish?
-				info "   => remove item because finished."
-				item.remove
-			end
+		if status.finish?
+			info "   => remove item because finished."
+			item.remove
 		end
 	end
 
