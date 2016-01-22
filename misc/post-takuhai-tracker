@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+#
+# usage:
+#   cat mail | post-takuhai-tracker <YOUR_USER_ID>
+#
+require 'mail'
+require 'nkf'
+require 'open-uri'
+
+def scan_item(mail)
+	case mail
+	when /お問い合わせ伝票番号は(:?.*)です。/ #amazon
+		return $1.flatten.first
+	when /配達受付番号（伝票番号）：(:?\d+)/  #yodobashi
+		return $1.flatten.first
+	end
+	raise StandardError
+end
+
+begin
+	user = ARGV.shift
+	mail = Mail.new(ARGF.read)
+	text = NKF.nkf('-w', mail.text_part.body.raw_source.unpack('M')[0])
+	item = scan_item(text)
+	if item
+		open("http://takuhai-tracker.herokuapp.com/#{user}/#{item}")
+	end
+end

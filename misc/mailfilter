@@ -1,0 +1,8 @@
+if ( /^From:.*ship-confirm@amazon.co.jp/ )
+{
+	cc "| post-takuhai-tracker"
+}
+if ( /^From:.*otodoke@yodobashi.com/ )
+{
+	cc "| post-takuhai-tracker"
+}
