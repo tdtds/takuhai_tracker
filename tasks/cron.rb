@@ -52,7 +52,7 @@ module TakuhaiTracker::Task
 
 		if status.finish?
 			info "   => remove item because finished."
-			#item.remove
+			item.remove
 		end
 	end
 
