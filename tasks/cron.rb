@@ -25,9 +25,9 @@ module TakuhaiTracker::Task
 			# save 1st checking timestamp to countdown for expire
 			item.update_attributes!(time: Time.now) unless item.time
 			return
-		rescue ItemExpired
+		rescue ItemExpired => e
 			info "   => try to remove old item"
-			$stderr.puts "try to remove old item: key:#{item.key}"
+			$stderr.puts "#{e}: try to remove old item: key:#{item.key}"
 			item.remove
 			return
 		end
@@ -59,6 +59,8 @@ module TakuhaiTracker::Task
 			begin
 				info "   => found existent item of #{item.service}"
 				return TakuhaiStatus.const_get(item.service).new(item.key)
+			rescue TakuhaiStatus::NotMyKey
+				raise ItemExpired.new("it is not #{item.service}'s code")
 			rescue
 				raise ItemNotFound.new("failed getting item info: [#$!] key:#{item.key}")
 			end
@@ -68,7 +70,7 @@ module TakuhaiTracker::Task
 			unless status
 				# remove item after 30 days not updated
 				if item.time && ((Time.now - item.time) / (60 * 60 * 24 * 30)) > 1
-					raise ItemExpired.new
+					raise ItemExpired.new("status not changed over 30 days")
 				end
 				raise ItemNotFound.new('')
 			end
