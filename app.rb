@@ -93,11 +93,16 @@ module TakuhaiTracker
 			begin
 				service = TakuhaiStatus.scan(key)
 				item = TakuhaiTracker::Item.find_or_create_by(user_id: user, key: key)
-				item.update_attributes!(
-					service: service.class.to_s.split(/::/).last,
-					time: service.time,
-					state: service.state
-				)
+				unless service.finish?
+					item.update_attributes!(
+						service: service.class.to_s.split(/::/).last,
+						time: service.time,
+						state: service.state
+					)
+				end
+			rescue TakuhaiStatus::Multiple
+				# if found multiple services, wait to finish other services
+				TakuhaiTracker::Item.find_or_create_by(user_id: params[:user], key: key)
 			rescue TakuhaiStatus::NotFound
 				if key.length >= 12
 					TakuhaiTracker::Item.find_or_create_by(user_id: params[:user], key: key)

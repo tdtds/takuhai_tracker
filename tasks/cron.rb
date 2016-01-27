@@ -70,8 +70,15 @@ module TakuhaiTracker::Task
 			end
 		else
 			info "   => found unhandled item"
-			status = TakuhaiStatus.scan(item.key) rescue nil
-			unless status
+			begin
+				status = TakuhaiStatus.scan(item.key)
+			rescue TakuhaiStatus::Multiple => e
+				raise ItemNotFound.new("found multiple services: #{e.services}")
+			rescue
+			end
+			if status && status.finish?
+				raise ItemNotFound.new("found only finished service: #{status}")
+			elsif !status
 				# remove item after 30 days not updated
 				if item.time && ((Time.now - item.time) / (60 * 60 * 24 * 30)) > 1
 					raise ItemExpired.new("status not changed over 30 days")
