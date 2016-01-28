@@ -1,12 +1,3 @@
-GIT
-  remote: git://github.com/tdtds/takuhai_status.git
-  revision: 804dd09d7c3279d8e1a14f3973e108fd19c4a744
-  specs:
-    takuhai_status (1.4.0)
-      faraday
-      faraday-cookie_jar
-      mechanize
-
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -32,6 +23,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    concurrent-ruby (1.0.0)
     diff-lcs (1.2.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
@@ -151,6 +143,10 @@ GEM
     sprockets-sass (1.3.1)
       sprockets (~> 2.0)
       tilt (~> 1.1)
+    takuhai_status (1.4.0)
+      faraday
+      faraday-cookie_jar
+      mechanize
     thread_safe (0.3.5)
     tilt (1.4.1)
     tzinfo (1.2.2)
@@ -186,7 +182,7 @@ DEPENDENCIES
   sinatra
   sinatra-asset-pipeline
   sinatra-reloader
-  takuhai_status!
+  takuhai_status
   uglifier
   yui-compressor
 
