@@ -16,7 +16,7 @@ gem 'rack_csrf', require: 'rack/csrf'
 gem 'dotenv'
 gem 'ruby-pushbullet', require: 'pushbullet'
 
-gem 'takuhai_status', github: 'tdtds/takuhai_status', require: 'takuhai_status'
+gem 'takuhai_status', require: 'takuhai_status'
 
 source 'https://rails-assets.org' do
 	gem 'rails-assets-jquery'
