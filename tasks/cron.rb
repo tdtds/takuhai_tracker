@@ -94,7 +94,7 @@ module TakuhaiTracker::Task
 		setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
 		if setting && setting.pushbullet && !setting.pushbullet.empty?
 			info "   => send notice via pushbullet"
-			service_name = SERVICES[item.service] || item.service || service_name(status)
+			service_name = SERVICES[service_name(status)] || service_name(status)
 			body = if item && item.memo && !item.memo.empty?
 				"#{status.state}\n(#{item.memo})"
 			else
