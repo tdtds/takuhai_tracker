@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/tdtds/takuhai_status.git
-  revision: 804dd09d7c3279d8e1a14f3973e108fd19c4a744
+  revision: b169018db1b4eadd9bc818b3832a59bddb1d061d
   specs:
-    takuhai_status (1.4.0)
+    takuhai_status (1.4.2)
       faraday
       faraday-cookie_jar
       mechanize
@@ -34,7 +34,7 @@ GEM
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.0)
     diff-lcs (1.2.5)
-    domain_name (0.5.25)
+    domain_name (0.5.20160128)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.0)
     execjs (2.6.0)
@@ -83,7 +83,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (2.15.3)
+    puma (2.16.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -92,7 +92,7 @@ GEM
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     rails-assets-jquery (2.2.0)
-    rails-assets-react (0.14.6)
+    rails-assets-react (0.14.7)
     rake (10.5.0)
     react-jsx-sprockets (0.2.2)
       execjs (>= 1.2.9)
@@ -161,7 +161,7 @@ GEM
       json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.1)
+    unf_ext (0.0.7.2)
     webrobots (0.1.2)
     yajl-ruby (1.2.1)
     yui-compressor (0.12.0)
