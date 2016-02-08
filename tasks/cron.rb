@@ -26,9 +26,13 @@ module TakuhaiTracker::Task
 			item.update_attributes!(time: Time.now) unless item.time
 			return
 		rescue ItemExpired => e
-			info "   => try to remove old item"
-			$stderr.puts "#{e}: try to remove old item: key:#{item.key}"
+			info "   => remove expired item"
+			$stderr.puts "#{e}: remove expired item: key:#{item.key}"
 			item.remove
+			return
+		rescue TakuhaiStatus::NotMyKey
+			info "   => removed item or API error"
+			$stderr.puts "removed item or API error: #{item.user_id}/#{item.key}"
 			return
 		end
 
@@ -64,7 +68,7 @@ module TakuhaiTracker::Task
 				info "   => found existent item of #{item.service}"
 				return TakuhaiStatus.const_get(item.service).new(item.key)
 			rescue TakuhaiStatus::NotMyKey
-				raise ItemExpired.new("it is not #{item.service}'s code")
+				raise
 			rescue
 				raise ItemNotFound.new("failed getting item info: [#$!] key:#{item.key}")
 			end
@@ -94,7 +98,7 @@ module TakuhaiTracker::Task
 		setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
 		if setting && setting.pushbullet && !setting.pushbullet.empty?
 			info "   => send notice via pushbullet"
-			service_name = SERVICES[item.service] || item.service || service_name(status)
+			service_name = SERVICES[service_name(status)] || service_name(status)
 			body = if item && item.memo && !item.memo.empty?
 				"#{status.state}\n(#{item.memo})"
 			else
