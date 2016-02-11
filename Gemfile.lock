@@ -14,7 +14,7 @@ GEM
       tzinfo (~> 1.1)
     autotest (4.4.6)
       ZenTest (>= 4.4.1)
-    backports (3.6.7)
+    backports (3.6.8)
     bson (4.0.1)
     bson_ext (1.5.1)
     builder (3.2.2)
@@ -23,7 +23,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
-    concurrent-ruby (1.0.0)
     diff-lcs (1.2.5)
     domain_name (0.5.20160128)
       unf (>= 0.0.5, < 1.0.0)
