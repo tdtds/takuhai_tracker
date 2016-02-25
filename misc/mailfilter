@@ -1,8 +1,12 @@
+RUBY=/usr/bin/ruby
+PTT=/home/hoge/bin/post-takuhai-tracker
+TTID=YOUR_TAKUHAI_TRACKER_ID
+
 if ( /^From:.*ship-confirm@amazon.co.jp/ )
 {
-	cc "| ruby post-takuhai-tracker YOUR_USER_ID"
+	cc "| ${RUBY} ${PTT} ${TTID}"
 }
 if ( /otodoke@yodobashi.com/ )
 {
-	cc "| ruby post-takuhai-tracker YOUR_USER_ID"
+	cc "| ${RUBY} ${PTT} ${TTID}"
 }
