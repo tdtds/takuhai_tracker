@@ -24,7 +24,7 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     diff-lcs (1.2.5)
-    domain_name (0.5.20160309)
+    domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.0)
     execjs (2.6.0)
@@ -73,7 +73,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (3.1.0)
+    puma (3.2.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -81,7 +81,7 @@ GEM
       rack (>= 1.0)
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
-    rails-assets-jquery (2.2.1)
+    rails-assets-jquery (2.2.2)
     rails-assets-react (0.14.7)
     rake (10.5.0)
     react-jsx-sprockets (0.2.2)
@@ -150,9 +150,8 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.7.2)
-      execjs (>= 0.3.0)
-      json (>= 1.8.0)
+    uglifier (3.0.0)
+      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
