@@ -73,7 +73,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (3.3.0)
+    puma (3.4.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -82,7 +82,7 @@ GEM
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     rails-assets-jquery (2.2.3)
-    rails-assets-react (0.14.8)
+    rails-assets-react (15.0.1)
     rake (10.5.0)
     react-jsx-sprockets (0.2.2)
       execjs (>= 1.2.9)
@@ -122,7 +122,7 @@ GEM
       sprockets (~> 2.12)
       sprockets-helpers (~> 1.1)
       sprockets-sass (~> 1.2)
-    sinatra-contrib (1.4.6)
+    sinatra-contrib (1.4.7)
       backports (>= 2.0)
       multi_json
       rack-protection
