@@ -41,7 +41,7 @@ module TakuhaiTracker::Task
 				send_notice(item, status)
 			rescue StandardError => e
 				# retry next chance without error about inactive user
-				unless e.message =~ /Account has not been used for over a month/
+				if e.message =~ /Account has not been used for over a month/
 					info "  => #{e.message}"
 					return
 				end
