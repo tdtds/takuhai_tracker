@@ -15,7 +15,7 @@ GEM
     autotest (4.4.6)
       ZenTest (>= 4.4.1)
     backports (3.6.8)
-    bson (4.0.4)
+    bson (4.1.0)
     bson_ext (1.5.1)
     builder (3.2.2)
     coderay (1.1.1)
