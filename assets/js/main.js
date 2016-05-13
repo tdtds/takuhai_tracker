@@ -205,9 +205,12 @@ var Memo = React.createClass({displayName: "Memo",
 	},
 	getInitialState:function() {
 		return {
-			memo: this.props.memo,
+			memo: '',
 			edit: false
 		};
+	},
+	componentWillReceiveProps:function(nextProps) {
+		this.setState({memo: nextProps.memo || ''});
 	},
 	componentDidUpdate:function(prevProps, prevState) {
 		if(!prevState.edit && this.state.edit){
@@ -217,7 +220,7 @@ var Memo = React.createClass({displayName: "Memo",
 		}
 	},
 	onClick:function() {
-		this.setState({memo: this.props.memo, edit: true});
+		this.setState({memo: this.state.memo, edit: true});
 	},
 	onChange:function(e) {
 		this.setState({memo: e.target.value});
