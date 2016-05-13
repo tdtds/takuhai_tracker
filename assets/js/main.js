@@ -211,7 +211,7 @@ var Memo = React.createClass({displayName: "Memo",
 	},
 	componentDidUpdate:function(prevProps, prevState) {
 		if(!prevState.edit && this.state.edit){
-			var input = this.refs.memoInput.getDOMNode();
+			var input = ReactDOM.findDOMNode(this.refs.memoInput);
 			input.focus();
 			input.selectionStart = input.selectionEnd = input.value.length;
 		}
@@ -264,7 +264,7 @@ var EntryItem = React.createClass({displayName: "EntryItem",
 		return {key: ""};
 	},
 	componentDidUpdate:function(prevProps, prevState) {
-		this.refs.inputKey.getDOMNode().focus();
+		this.refs.inputKey.focus();
 	},
 	onChange:function(e) {
 		this.setState({key: e.target.value});
@@ -364,7 +364,7 @@ var PushbulletSetting = React.createClass({displayName: "PushbulletSetting",
 			React.createElement("p", null, "Pushbulletを使って状況を通知します。以下にPushbulletのAccess Tokenを入力して下さい。Access Tokenは", React.createElement("a", {href: "https://www.pushbullet.com/#settings"}, "こちら"), "から入手できます。"), 
 			React.createElement("div", {className: "notify-icon"}, validation), 
 			React.createElement("div", {className: "mdl-textfield mdl-js-textfield"}, 
-				React.createElement("input", {className: "mdl-textfield__input", value: this.state.token, defaultValue: this.props.token, placeholder: "Access Token...", onChange: this.onChange})
+				React.createElement("input", {type: "text", className: "mdl-textfield__input", value: this.state.token, placeholder: "Access Token...", onChange: this.onChange})
 			), 
 			React.createElement("button", {className: "mdl-button mdl-js-button mdl-button--primary", onClick: this.onClick}, 
 				"Save"
@@ -453,5 +453,5 @@ var Main = React.createClass({displayName: "Main",
 
 var main = document.getElementById('main');
 if (main) {
-	React.render(React.createElement(Main, null), main);
+	ReactDOM.render(React.createElement(Main, null), main);
 }

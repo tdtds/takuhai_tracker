@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.3.0'
+ruby '2.3.1'
 
 gem 'sinatra', require: 'sinatra/base'
 gem 'sinatra-asset-pipeline', require: 'sinatra/asset_pipeline'
@@ -20,7 +20,7 @@ gem 'takuhai_status', require: 'takuhai_status'
 
 source 'https://rails-assets.org' do
 	gem 'rails-assets-jquery'
-	gem 'rails-assets-react', '~> 0.14.0'
+	gem 'rails-assets-react', '~> 15.0.0'
 end
 
 group :development, :test do
