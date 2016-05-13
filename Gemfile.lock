@@ -82,7 +82,7 @@ GEM
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     rails-assets-jquery (2.2.3)
-    rails-assets-react (0.14.8)
+    rails-assets-react (15.0.2)
     rake (10.5.0)
     react-jsx-sprockets (0.2.2)
       execjs (>= 1.2.9)
@@ -172,7 +172,7 @@ DEPENDENCIES
   puma
   rack_csrf
   rails-assets-jquery!
-  rails-assets-react (~> 0.14.0)!
+  rails-assets-react (~> 15.0.0)!
   rake
   react-jsx-sprockets
   rspec

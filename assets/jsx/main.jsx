@@ -205,19 +205,22 @@ var Memo = React.createClass({
 	},
 	getInitialState() {
 		return {
-			memo: this.props.memo,
+			memo: '',
 			edit: false
 		};
 	},
+	componentWillReceiveProps(nextProps) {
+		this.setState({memo: nextProps.memo || ''});
+	},
 	componentDidUpdate(prevProps, prevState) {
 		if(!prevState.edit && this.state.edit){
-			var input = this.refs.memoInput.getDOMNode();
+			var input = ReactDOM.findDOMNode(this.refs.memoInput);
 			input.focus();
 			input.selectionStart = input.selectionEnd = input.value.length;
 		}
 	},
 	onClick() {
-		this.setState({memo: this.props.memo, edit: true});
+		this.setState({memo: this.state.memo, edit: true});
 	},
 	onChange(e) {
 		this.setState({memo: e.target.value});
@@ -264,7 +267,7 @@ var EntryItem = React.createClass({
 		return {key: ""};
 	},
 	componentDidUpdate(prevProps, prevState) {
-		this.refs.inputKey.getDOMNode().focus();
+		this.refs.inputKey.focus();
 	},
 	onChange(e) {
 		this.setState({key: e.target.value});
@@ -364,7 +367,7 @@ var PushbulletSetting = React.createClass({
 			<p>Pushbulletを使って状況を通知します。以下にPushbulletのAccess Tokenを入力して下さい。Access Tokenは<a href="https://www.pushbullet.com/#settings">こちら</a>から入手できます。</p>
 			<div className="notify-icon">{validation}</div>
 			<div className="mdl-textfield mdl-js-textfield">
-				<input className="mdl-textfield__input" value={this.state.token} defaultValue={this.props.token} placeholder="Access Token..." onChange={this.onChange} />
+				<input type="text" className="mdl-textfield__input" value={this.state.token} placeholder="Access Token..." onChange={this.onChange} />
 			</div>
 			<button className="mdl-button mdl-js-button mdl-button--primary" onClick={this.onClick}>
 				Save
@@ -453,5 +456,5 @@ var Main = React.createClass({
 
 var main = document.getElementById('main');
 if (main) {
-	React.render(<Main />, main);
+	ReactDOM.render(<Main />, main);
 }
