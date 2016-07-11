@@ -4,20 +4,10 @@
 		%meta{charset: 'UTF-8'}
 		%meta{name: "viewport", content: "width=device-width,initial-scale=1"}
 		%title 宅配トラッカー
-		%link{rel:"stylesheet", href:"/css/app.css", media:"all"}
+		%link{rel:"stylesheet", href:"/css/top.css", media:"all"}
 		%link{:rel => "apple-touch-icon", :href => "/img/touch-icon.png"}
 	%body.index
-		%h1 宅配トラッカー
-		%form.index{method: 'POST', action: "/"}
-			%button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--colored{type: "submit"}
-				%i.material-icons<add
-		%p
-			宅配便の配送状況を定期的にチェックして、変化があったときに
-			%a{href: "https://www.pushbullet.com/"}<Pushbullet
-			で通知してくれるサービスです。現在、ヤマト運輸、佐川急便、日本郵便、TMG、UPS
-			およびFedExの6サービスに対応しています(ただしTMGはAmazonの荷物のみ、FedExは試験運用中)。
-			あらかじめPushbulletのAPIトークンを設定し、あとは各サービスの
-			伝票番号を入力していくだけで使えます。
+		#main
 		%div.contact
 			%a.pushbullet-subscribe-widget{"data-channel"=>"takuhai_tracker", "data-widget"=>"button", "data-size"=>"small"}<
 				%script{type: "text/javascript"}
@@ -26,4 +16,4 @@
 				%img{src: "img/facebook.png", alt: "Contact us via Facebook"}
 			%a{href: "https://github.com/tdtds/takuhai_tracker"}<
 				%img{src: "img/github.png", alt: "Contact us via GitHub"}
-		%script{src: "/js/app.js"}
+		%script{src: "/js/top.js"}
