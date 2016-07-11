@@ -3,10 +3,6 @@ source 'https://rubygems.org'
 ruby '2.3.1'
 
 gem 'sinatra', require: 'sinatra/base'
-gem 'sinatra-asset-pipeline', require: 'sinatra/asset_pipeline'
-gem 'react-jsx-sprockets', require: 'react-jsx-sprockets'
-gem 'uglifier'
-gem 'yui-compressor'
 
 gem 'puma'
 gem 'haml', require: 'haml'
@@ -17,11 +13,6 @@ gem 'dotenv'
 gem 'ruby-pushbullet', require: 'pushbullet'
 
 gem 'takuhai_status', require: 'takuhai_status'
-
-source 'https://rails-assets.org' do
-	gem 'rails-assets-jquery'
-	gem 'rails-assets-react', '~> 15.0.0'
-end
 
 group :development, :test do
 	gem 'rake'

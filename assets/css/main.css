@@ -6,6 +6,8 @@
  */
 
 body {
+	margin: 0px;
+	padding: 0px;
 	background-color: #f8f8f8;
 }
 
@@ -21,6 +23,7 @@ h1 {
 .data-table {
 	text-align: center;
 	margin: 1em auto 0px auto;
+	max-width: 50em;
 }
 
 .data-table table {
@@ -41,56 +44,6 @@ h1 {
 	padding-bottom: 30px;
 }
 
-.fake-mdl_textfield_input {
-	background-color: transparent;
-	border-width: 0px 0px 2px 0px;
-	border-color: rgba(0, 0, 0, 0.12);
-	padding: 2px;
-	width: 100%;
-}
-.fake-mdl_textfield_input:focus {
-	outline-style: none;
-	border-color: #3f51b5; 
-}
-
-button.new-item {
-	margin-top: -28px;
-}
-
-form.notify {
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-form.notify p {
-	text-align: left;
-	font-size: small;
-	margin-top: 0px;
-}
-
-div.notify-icon {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 4px;
-}
-
-div.notify-icon i.check_circle {
-	color: green;
-}
-
-div.notify-icon i.error {
-	color: red;
-}
-
-form.notify div.message {
-	font-size: small;
-}
-
-form.index {
-	text-align: center;
-}
-
 body {
 	padding-bottom: 50px;
 }
@@ -104,6 +57,23 @@ body.index p {
 	margin-top: 2em;
 }
 
+form.notify {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.form-inner {
+	margin-left: 3em;
+}
+
+div.form-inner p {
+	margin-left: 0px;
+}
+
+form.index {
+	text-align: center;
+}
+
 h2 {
 	color: #eee;
 	background-color: #005;
@@ -114,8 +84,8 @@ h2 {
 }
 
 h3 {
-	text-align: center;
 	font-size: large;
+	font-weight: normal;
 	margin: 8px 0px 0px 0px;
 }
 

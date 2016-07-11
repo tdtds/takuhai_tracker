@@ -7,5 +7,10 @@
   },
   "addons":[
     "mongolab"
+  ],
+  "buildpacks": [
+    {"url": "https://github.com/heroku/heroku-buildpack-ruby"},
+    {"url": "https://github.com/heroku/heroku-buildpack-nodejs"},
+    {"url": "https://github.com/tdtds/heroku-buildpack-webpack"}
   ]
 }
