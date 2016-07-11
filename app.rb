@@ -10,16 +10,6 @@ module TakuhaiTracker
 		set :haml, {format: :html5, escape_html: true}
 		enable :logging
 
-		set :assets_precompile, %w(application.js application.css *.png *.jpg *.svg)
-		set :assets_css_compressor, :yui
-		set :assets_js_compressor, :uglifier
-		register Sinatra::AssetPipeline
-		if defined?(RailsAssets)
-			RailsAssets.load_paths.each do |path|
-				settings.sprockets.append_path(path)
-			end
-		end
-
 		enable :sessions
 		configure do
 			Mongoid::load!('config/mongoid.yml')
@@ -48,6 +38,7 @@ module TakuhaiTracker
 
 		get '/:user.json' do
 			items = TakuhaiTracker::Item.where(user_id: params[:user])
+			content_type :json
 			return items.to_json
 		end
 
@@ -66,6 +57,7 @@ module TakuhaiTracker
 				return 404, 'Document not Found'
 			else
 				setting['pushbullet_validation'] = pushbullet_valid?(setting.pushbullet)
+				content_type :json
 				return setting.to_json
 			end
 		end
@@ -110,7 +102,7 @@ module TakuhaiTracker
 			rescue Mongoid::Errors::Validations
 				return 409, "dupulicated key"
 			end
-			redirect "/#{user}"
+			redirect "/#{user}.json"
 		end
 
 		delete '/:user/:key' do
@@ -121,18 +113,22 @@ module TakuhaiTracker
 			rescue Mongoid::Errors::DocumentNotFound
 				return 404
 			end
+
 			item.remove
-			redirect "/#{user}"
+			redirect "/#{user}.json"
 		end
 
 		put '/:user/:key' do
 			user = params[:user]
 			key = params[:key].gsub(/[^a-zA-Z0-9]/, '')
-			item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
-			return 404 unless item
+			begin
+				item = TakuhaiTracker::Item.find_by(user_id: user, key: key)
+			rescue Mongoid::Errors::DocumentNotFound
+				return 404
+			end
 
 			item.update_attributes!(memo: params[:memo]) if params[:memo]
-			return 200
+			redirect "/#{user}.json"
 		end
 	end
 end

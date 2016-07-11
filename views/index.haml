@@ -4,8 +4,7 @@
 		%meta{charset: 'UTF-8'}
 		%meta{name: "viewport", content: "width=device-width,initial-scale=1"}
 		%title 宅配トラッカー
-		!= stylesheet_tag 'application'
-		%link{rel: "stylesheet", href: "//fonts.googleapis.com/icon?family=Material+Icons"}
+		%link{rel:"stylesheet", href:"/css/app.css", media:"all"}
 		%link{:rel => "apple-touch-icon", :href => "/img/touch-icon.png"}
 	%body.index
 		%h1 宅配トラッカー
@@ -27,3 +26,4 @@
 				%img{src: "img/facebook.png", alt: "Contact us via Facebook"}
 			%a{href: "https://github.com/tdtds/takuhai_tracker"}<
 				%img{src: "img/github.png", alt: "Contact us via GitHub"}
+		%script{src: "/js/app.js"}

@@ -4,17 +4,12 @@
 		%meta{charset: 'UTF-8'}
 		%meta{name: "viewport", content: "width=device-width,initial-scale=1"}
 		%title 宅配トラッカー - ユーザページ
-		!= stylesheet_tag 'application'
-		%link{rel: "stylesheet", href: "//fonts.googleapis.com/icon?family=Material+Icons"}
+		%link{rel:"stylesheet", href:"/css/app.css", media:"all"}
 		%link{:rel => "apple-touch-icon", :href => "/img/touch-icon.png"}
 	%body.user
-		%h1 宅配トラッカー
-		%p
-			このページはあなた専用です。ブックマークしておくことで再利用できます。
-			このURLを他人に教えないよう注意して下さい。
 		#main{"data-user": user}
 		%div.contact
 			%a.pushbullet-subscribe-widget{"data-channel"=>"takuhai_tracker", "data-widget"=>"button", "data-size"=>"small"}<
 				%script{type: "text/javascript"}
 					(function(){var a=document.createElement('script');a.type='text/javascript';a.async=true;a.src='https://widget.pushbullet.com/embed.js';var b=document.getElementsByTagName('script')[0];b.parentNode.insertBefore(a,b);})();
-		!= javascript_tag 'application'
+		%script{src: "/js/app.js"}
