@@ -4,6 +4,7 @@ const path = require('path');
 
 module.exports = {
 	entry: {
+		top: './assets/js/index.js',
 		app: './assets/js/main.js'
 	},
 	output: {

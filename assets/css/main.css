@@ -20,6 +20,10 @@ h1 {
 	font-size: x-large;
 }
 
+form.index {
+	margin-top: 1em;
+}
+
 .data-table {
 	text-align: center;
 	margin: 1em auto 0px auto;
