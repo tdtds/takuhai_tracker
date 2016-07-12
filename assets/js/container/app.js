@@ -40,7 +40,7 @@ export default class App extends Flux {
 							case 200: return res.json();
 							case 409:
 								alert('重複する伝票番号は登録できません。この伝票は誰か他の人が追跡中です。');
-								return Promise.resolve(state);
+								return Promise.resolve(state.data);
 							default: return reject(res);
 						}
 					}).
