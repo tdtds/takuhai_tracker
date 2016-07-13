@@ -8,7 +8,6 @@ import * as React from 'react';
 import {Component} from 'flumpt';
 import {MuiThemeProvider, ListItem, Avatar, IconButton, TextField} from 'material-ui';
 import {CommunicationComment, ContentClear} from 'material-ui/svg-icons';
-import Memo from './memo';
 
 export const DELETE_ITEM = 'delete-item';
 export const UPDATE_MEMO = 'update-memo';
@@ -57,9 +56,9 @@ export default class DataColumn extends Component {
 	}
 
 	onKeyUp(e) {
-		if (e.keyCode == 13) { // enter
+		if (e.keyCode == 13 || e.keyCode == 27) { // enter or escape
 			e.preventDefault();
-			this.updateMemo();
+			this.refs.memo.blur(); //=> call updateMemo on blur
 		}
 	}
 
