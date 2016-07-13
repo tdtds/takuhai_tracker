@@ -33,6 +33,10 @@ export default class DataColumn extends Component {
 				return '佐川急便';
 			case 'TMGCargo':
 				return 'TMG';
+			case 'UPS':
+				return 'UPS';
+			case 'FedEx':
+				return 'FedEx';
 			default:
 				return '(運送業者不明)';
 		}
