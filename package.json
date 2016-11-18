@@ -25,7 +25,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "flumpt": "^0.2.0",
-    "material-ui": "^2.0.0",
+    "material-ui": "^0.16.4",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
     "react-tap-event-plugin": "^2.0.1",
