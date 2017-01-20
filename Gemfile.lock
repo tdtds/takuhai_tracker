@@ -1,18 +1,18 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.0.1)
-      activesupport (= 5.0.1)
-    activesupport (5.0.1)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (~> 0.7)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
+    activemodel (3.2.22.5)
+      activesupport (= 3.2.22.5)
+      builder (~> 3.0.0)
+    activesupport (3.2.22.5)
+      i18n (~> 0.6, >= 0.6.4)
+      multi_json (~> 1.0)
     backports (3.6.8)
-    bson (4.2.1)
-    bson_ext (1.5.1)
+    bson (1.12.5)
+    bson_ext (1.12.5)
+      bson (~> 1.12.5)
+    builder (3.0.4)
     coderay (1.1.1)
-    concurrent-ruby (1.0.4)
     diff-lcs (1.2.5)
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
@@ -61,12 +61,12 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.3)
     mini_portile2 (2.1.0)
-    minitest (5.10.1)
-    mongo (2.4.1)
-      bson (>= 4.2.1, < 5.0.0)
-    mongoid (6.0.3)
-      activemodel (~> 5.0)
-      mongo (~> 2.3)
+    mongoid (3.1.7)
+      activemodel (~> 3.2)
+      moped (~> 1.4)
+      origin (~> 1.0)
+      tzinfo (~> 0.3.29)
+    moped (1.5.3)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     nenv (0.3.0)
@@ -79,6 +79,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     ntlm-http (0.1.1)
+    origin (1.1.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -136,10 +137,8 @@ GEM
       faraday-cookie_jar
       mechanize
     thor (0.19.4)
-    thread_safe (0.3.5)
     tilt (2.0.5)
-    tzinfo (1.2.2)
-      thread_safe (~> 0.1)
+    tzinfo (0.3.52)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -162,9 +161,6 @@ DEPENDENCIES
   sinatra
   sinatra-reloader
   takuhai_status
-
-RUBY VERSION
-   ruby 2.4.0p0
 
 BUNDLED WITH
    1.13.7
