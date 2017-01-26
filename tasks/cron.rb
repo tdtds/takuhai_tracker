@@ -135,7 +135,19 @@ task :cron do
 	Dotenv.load if ENV['RACK_ENV'] == 'production'
 	Mongoid::load!('config/mongoid.yml')
 
-	TakuhaiTracker::Item.all.each do |item|
-		TakuhaiTracker::Task.check_item(item)
+	retry_count = 0
+	begin
+		TakuhaiTracker::Item.all.each do |item|
+			TakuhaiTracker::Task.check_item(item)
+		end
+	rescue Mongo::Auth::Unauthorized
+		retry_count += 1
+		if retry_count < 5 # retry 5 times each 5 seconds
+			$stderr.puts "login database faiure. retring(#{retry_count})"
+			sleep 5
+			retry
+		else
+			raise
+		end
 	end
 end
