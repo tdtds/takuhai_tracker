@@ -1,6 +1,9 @@
 function gmailchecker(){
 
-	var ID = "YOUR TAKUTORA ID"
+	var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+	var sheet = spreadsheet.getSheetByName("宅配トラッカー自動登録")
+	var cell = sheet.getRange("B3");
+	var ID = cell.getValue();
 
 	var mailThreads = GmailApp.getInboxThreads(0,100);
 	for(var n in mailThreads){
@@ -34,3 +37,4 @@ function gmailchecker(){
 		}
 	}
 }
+

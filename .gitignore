@@ -9,6 +9,7 @@
 /test/version_tmp/
 /tmp/
 /vendor/bundle/
+/misc/gas/gapps.config.json
 
 ## Specific to RubyMotion:
 .dat*

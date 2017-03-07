@@ -18,18 +18,22 @@ Gmailに届いたAmazonからの配送通知メールを定期的にチェック
 
 GASコードを管理する方法として、以下のツールをご利用ください。
 
-[danthareja/node-google-apps-script](https://github.com/danthareja/node-google-apps-script#11-default-apps-script-developer-console-project)
+[danthareja/node-google-apps-script](https://github.com/danthareja/node-google-apps-script)
 
 ## 利用方法
 
 ###  1.スクリプトの登録
 
-1. [GASプロジェクト](https://script.google.com)にアクセスし、「無題のプロジェクト」
-を開きます。
+本ツールは宅配トラッカーIDの情報連携をGoogleスプレッドシートを利用する仕組みとなっています。
 
-2. デフォルトのコードを除去し、[src/gmailchecker.js](src/gmailcheker.js)を貼り付けます。
+1. Googleスプレッドシートを新規で作成します。
 
-- "ID"にご自身の宅配トラッカーID(ユーザページのURLパス文字列)を記入します。
+[サンプルスプレッドシート](https://docs.google.com/spreadsheets/d/1l2ZDZczCIgAW_f-GlMjMx8tPvMZRJez2YH0djJTsrl0/edit#gid=0)も用意してあります。
+スクリプト登録まで実施済みとなっておりますのでこちらもご使用ください。
+
+2. [ツール]から[スクリプトエディタ]を起動します。
+
+3. デフォルトのコードを除去し、[src/gmailchecker.js](src/gmailcheker.js)を貼り付けます。
 
 - "ファイル" -> "保存" を選択し、スクリプトを保存します。
 	- 名称は任意のもので問題ありません。
