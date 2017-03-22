@@ -6,7 +6,7 @@ gem 'sinatra', require: 'sinatra/base'
 
 gem 'puma'
 gem 'haml', require: 'haml'
-gem 'mongoid', require: 'mongoid'
+gem 'mongoid', '~> 6.1.0', require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'
 gem 'dotenv'
