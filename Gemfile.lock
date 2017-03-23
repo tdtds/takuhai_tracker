@@ -163,8 +163,5 @@ DEPENDENCIES
   sinatra-reloader
   takuhai_status
 
-RUBY VERSION
-   ruby 2.3.3p222
-
 BUNDLED WITH
    1.14.3
