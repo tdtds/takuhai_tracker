@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-ruby '~> 2.3.0'
+ruby '~> 2.4.1'
 
 gem 'sinatra', require: 'sinatra/base'
 
 gem 'puma'
-gem 'haml', require: 'haml'
+gem 'hamlit', require: 'hamlit'
 gem 'mongoid', '~> 6.1.0', require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'

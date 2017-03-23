@@ -7,7 +7,7 @@ require_relative 'models/setting'
 
 module TakuhaiTracker
 	class App < Sinatra::Base
-		set :haml, {format: :html5, escape_html: true}
+		set :haml, {format: :html5}
 		enable :logging
 
 		enable :sessions
