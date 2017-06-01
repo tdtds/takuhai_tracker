@@ -44,7 +44,7 @@ GEM
       tilt
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.8.1)
+    i18n (0.8.4)
     json (2.1.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -64,7 +64,7 @@ GEM
     mime-types (2.99.3)
     mini_portile2 (2.1.0)
     minitest (5.10.2)
-    mongo (2.4.1)
+    mongo (2.4.2)
       bson (>= 4.2.1, < 5.0.0)
     mongoid (6.1.0)
       activemodel (~> 5.0)
