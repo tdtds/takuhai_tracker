@@ -9,7 +9,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     backports (3.8.0)
-    bson (4.2.1)
+    bson (4.2.2)
     bson_ext (1.5.1)
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
@@ -44,7 +44,7 @@ GEM
       tilt
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.8.4)
+    i18n (0.8.6)
     json (2.1.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -93,7 +93,7 @@ GEM
     rack_csrf (2.6.0)
       rack (>= 1.1.0)
     rake (12.0.0)
-    rb-fsevent (0.10.1)
+    rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     rest-client (1.8.0)
@@ -133,7 +133,7 @@ GEM
     sinatra-reloader (1.0)
       sinatra-contrib
     slop (3.6.0)
-    takuhai_status (1.5.4)
+    takuhai_status (1.5.5)
       faraday
       faraday-cookie_jar
       mechanize
@@ -165,6 +165,9 @@ DEPENDENCIES
   sinatra
   sinatra-reloader
   takuhai_status
+
+RUBY VERSION
+   ruby 2.4.1p111
 
 BUNDLED WITH
    1.14.6
