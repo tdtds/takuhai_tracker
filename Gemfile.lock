@@ -1,9 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.1.3)
-      activesupport (= 5.1.3)
-    activesupport (5.1.3)
+    activemodel (5.1.4)
+      activesupport (= 5.1.4)
+    activesupport (5.1.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
@@ -11,13 +11,13 @@ GEM
     backports (3.8.0)
     bson (4.2.2)
     bson_ext (1.5.1)
-    coderay (1.1.1)
+    coderay (1.1.2)
     concurrent-ruby (1.0.5)
     diff-lcs (1.3)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.2.1)
-    faraday (0.13.0)
+    faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
     faraday-cookie_jar (0.0.6)
       faraday (>= 0.7.4)
@@ -69,9 +69,9 @@ GEM
     mongoid (6.1.1)
       activemodel (~> 5.0)
       mongo (>= 2.4.1, < 3.0.0)
-    multi_json (1.12.1)
+    multi_json (1.12.2)
     multipart-post (2.0.0)
-    mustermann (1.0.0)
+    mustermann (1.0.1)
     nenv (0.3.0)
     net-http-digest_auth (1.4.1)
     net-http-persistent (2.9.4)
@@ -86,13 +86,13 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (3.9.1)
+    puma (3.10.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
     rack_csrf (2.6.0)
       rack (>= 1.1.0)
-    rake (12.0.0)
+    rake (12.1.0)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -133,7 +133,7 @@ GEM
     sinatra-reloader (1.0)
       sinatra-contrib
     slop (3.6.0)
-    takuhai_status (1.5.5)
+    takuhai_status (1.6.0)
       faraday
       faraday-cookie_jar
       mechanize
@@ -166,5 +166,8 @@ DEPENDENCIES
   sinatra-reloader
   takuhai_status
 
+RUBY VERSION
+   ruby 2.4.1p111
+
 BUNDLED WITH
-   1.14.6
+   1.16.0.pre.2
