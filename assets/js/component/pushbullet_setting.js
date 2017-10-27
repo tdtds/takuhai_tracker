@@ -37,7 +37,7 @@ export default class PushbulletSetting extends Component {
 		return(<form className='notify pushbullet' onSubmit={(e) => this.onSubmit(e)}>
 			<h3>Pushbullet</h3>
 			<div className='form-inner'>
-				<p>Pushbulletを使って状況を通知します。以下にPushbulletのAccess Tokenを入力して下さい。Access Tokenは<a href="https://www.pushbullet.com/#settings">こちら</a>から入手できます。</p>
+				<p>Pushbulletによる通知が欲しい場合はAccess Tokenを入力して下さい。Access Tokenは<a href="https://www.pushbullet.com/#settings">こちら</a>から入手できます。</p>
 				<MuiThemeProvider>
 					<TextField style={{width: '32ex'}}
 						hintText="Access Token"

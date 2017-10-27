@@ -26,6 +26,16 @@ module TakuhaiTracker
 			end
 		end
 
+		def ifttt_valid?(key)
+			return false if !key or key.empty?
+			begin
+				open("https://maker.ifttt.com/trigger/takuhai_tracker/with/key/#{key}", &:read)
+				return true
+			rescue OpenURI::HTTPError
+				return false
+			end
+		end
+
 		get '/' do
 			haml :index
 		end
@@ -57,6 +67,7 @@ module TakuhaiTracker
 				return 404, 'Document not Found'
 			else
 				setting['pushbullet_validation'] = pushbullet_valid?(setting.pushbullet)
+				setting['ifttt_validation'] = ifttt_valid?(setting.ifttt)
 				content_type :json
 				return setting.to_json
 			end
@@ -65,15 +76,18 @@ module TakuhaiTracker
 		post '/:user/setting' do
 			user = params[:user]
 			pushbullet = params[:pushbullet]
+			ifttt = params[:ifttt]
 			mail = params[:mail]
 			setting = TakuhaiTracker::Setting.find_or_create_by(user_id: user)
 			setting.update_attributes!(
 				user_id: user,
 				pushbullet: pushbullet,
+				ifttt: ifttt,
 				mail: mail
 			)
 
 			setting['pushbullet_validation'] = pushbullet_valid?(pushbullet)
+			setting['ifttt_validation'] = ifttt_valid?(ifttt)
 			return setting.to_json
 		end
 

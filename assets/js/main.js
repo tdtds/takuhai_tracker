@@ -21,6 +21,8 @@ const state = {
 	setting: {
 		pushbullet: '',
 		pushbullet_validation: false,
+		ifttt: '',
+		ifttt_validation: false,
 		mail: ''
 	},
 	busy: false
