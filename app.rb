@@ -4,6 +4,7 @@
 Bundler.require
 require_relative 'models/item'
 require_relative 'models/setting'
+require_relative 'lib/ifttt_webhook'
 
 module TakuhaiTracker
 	class App < Sinatra::Base
@@ -22,16 +23,6 @@ module TakuhaiTracker
 				Pushbullet::Contact.me
 				return true
 			rescue
-				return false
-			end
-		end
-
-		def ifttt_valid?(key)
-			return false if !key or key.empty?
-			begin
-				open("https://maker.ifttt.com/trigger/takuhai_tracker/with/key/#{key}", &:read)
-				return true
-			rescue OpenURI::HTTPError
 				return false
 			end
 		end
@@ -67,7 +58,7 @@ module TakuhaiTracker
 				return 404, 'Document not Found'
 			else
 				setting['pushbullet_validation'] = pushbullet_valid?(setting.pushbullet)
-				setting['ifttt_validation'] = ifttt_valid?(setting.ifttt)
+				setting['ifttt_validation'] = IftttWebhook.valid_key?(setting.ifttt)
 				content_type :json
 				return setting.to_json
 			end
@@ -87,7 +78,7 @@ module TakuhaiTracker
 			)
 
 			setting['pushbullet_validation'] = pushbullet_valid?(pushbullet)
-			setting['ifttt_validation'] = ifttt_valid?(ifttt)
+			setting['ifttt_validation'] = IftttWebhook.valid_key?(ifttt)
 			return setting.to_json
 		end
 
