@@ -4,7 +4,7 @@
 
 require 'dotenv'
 require 'pushbullet'
-require './app'
+require_relative '../app'
 
 module TakuhaiTracker::Task
 	SERVICES = {
@@ -97,17 +97,28 @@ module TakuhaiTracker::Task
 	def self.send_notice(item, status)
 		info "   => start notice sending"
 		setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
-		if setting && setting.pushbullet && !setting.pushbullet.empty?
-			info "   => send notice via pushbullet"
+		done = 0
+		if setting
 			service_name = SERVICES[service_name(status)] || service_name(status)
 			body = if item && item.memo && !item.memo.empty?
 				"#{status.state}\n(#{item.memo})"
 			else
 				status.state
 			end
-			Pushbullet.api_token = setting.pushbullet
-			Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
-		else
+			if setting.pushbullet && !setting.pushbullet.empty?
+				info "   => send notice via pushbullet"
+				Pushbullet.api_token = setting.pushbullet
+				Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
+				done += 1
+			end
+			if setting.ifttt && !setting.ifttt.empty?
+				info "   => send notice via ifttt webhook"
+				ifttt = IftttWebhook.new(setting.ifttt)
+				ifttt.post("#{service_name} #{item.key}", body)
+				done += 1
+			end
+		end
+		if done == 0
 			info "   => not send with bad setting"
 		end
 	end
