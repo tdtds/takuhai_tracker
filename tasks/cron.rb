@@ -103,7 +103,7 @@ module TakuhaiTracker::Task
 			end
 
 			if setting.pushbullet && !setting.pushbullet.empty?
-				send_pushbullet_notice(setting.pushbulle, service_name, item, body)
+				send_pushbullet_notice(setting.pushbullet, service_name, item, body)
 				done += 1
 			end
 			if setting.ifttt && !setting.ifttt.empty?
