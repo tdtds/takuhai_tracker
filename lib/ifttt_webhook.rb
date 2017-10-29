@@ -4,11 +4,14 @@ require 'json'
 
 class IftttWebhook
 	ENTRY = URI('https://maker.ifttt.com/trigger/takuhai_tracker/with/key/')
+	CHECK_ENTRY = URI('https://maker.ifttt.com/trigger/takuhai_tracker_test/with/key/')
 
 	def self.valid_key?(key)
 		return false if !key or key.empty?
 		begin
-			open("#{ENTRY}#{key}", &:read)
+			# use invalid trigger 'takuhai_tracker_test'
+			# to avoid error activity logged on IFTTT
+			open("#{CHECK_ENTRY}#{key}", &:read)
 			return true
 		rescue OpenURI::HTTPError
 			return false
