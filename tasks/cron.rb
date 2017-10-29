@@ -4,7 +4,7 @@
 
 require 'dotenv'
 require 'pushbullet'
-require './app'
+require_relative '../app'
 
 module TakuhaiTracker::Task
 	SERVICES = {
@@ -15,6 +15,7 @@ module TakuhaiTracker::Task
 	}.freeze
 	class ItemNotFound < StandardError; end
 	class ItemExpired  < StandardError; end
+	class RetryNext  < StandardError; end
 
 	def self.check_item(item)
 		info "start checking #{item.key}"
@@ -27,32 +28,27 @@ module TakuhaiTracker::Task
 			return
 		rescue ItemExpired => e
 			info "   => remove expired item"
-			$stderr.puts "#{e}: remove expired item: key:#{item.key}"
+			error "#{e}: remove expired item: key:#{item.key}"
 			item.remove
 			return
 		rescue TakuhaiStatus::NotMyKey
 			info "   => removed item or API error"
-			$stderr.puts "removed item or API error: #{item.user_id}/#{item.key}"
+			error "removed item or API error: #{item.user_id}/#{item.key}"
 			return
 		end
 
 		if item.state != status.state
 			begin
 				send_notice(item, status)
-			rescue StandardError => e
-				# retry next chance without error about inactive user
-				if e.message =~ /Account has not been used for over a month/
-					info "  => #{e.message}"
-					return
-				end
-
-				$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			rescue RetryNext => e
+				# retry next chance without status update
+				return
 			end
 
 			begin
 				update_item(item, status)
 			rescue StandardError => e
-				$stderr.puts "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+				error "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 				return
 			end
 		end
@@ -97,18 +93,50 @@ module TakuhaiTracker::Task
 	def self.send_notice(item, status)
 		info "   => start notice sending"
 		setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
-		if setting && setting.pushbullet && !setting.pushbullet.empty?
-			info "   => send notice via pushbullet"
+		done = 0
+		if setting
 			service_name = SERVICES[service_name(status)] || service_name(status)
 			body = if item && item.memo && !item.memo.empty?
 				"#{status.state}\n(#{item.memo})"
 			else
 				status.state
 			end
-			Pushbullet.api_token = setting.pushbullet
-			Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
-		else
+
+			if setting.pushbullet && !setting.pushbullet.empty?
+				send_pushbullet_notice(setting.pushbulle, service_name, item, body)
+				done += 1
+			end
+			if setting.ifttt && !setting.ifttt.empty?
+				send_ifttt_notice(setting.ifttt, service_name, item, body)
+				done += 1
+			end
+		end
+		if done == 0
 			info "   => not send with bad setting"
+		end
+	end
+
+	def self.send_pushbullet_notice(token, service_name, item, body)
+		begin
+			info "   => send notice via pushbullet"
+			Pushbullet.api_token = token
+			Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
+		rescue StandardError => e
+			if e.message =~ /Account has not been used for over a month/
+				info "  => #{e.message}"
+				raise RetryNext.new(e.message)
+			end
+			error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+		end
+	end
+
+	def self.send_ifttt_notice(token, service_name, item, body)
+		begin
+			info "   => send notice via ifttt webhook"
+			ifttt = IftttWebhook.new(token)
+			ifttt.post("#{service_name} #{item.key}", body)
+		rescue StandardError => e
+			error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
@@ -125,8 +153,12 @@ module TakuhaiTracker::Task
 		status.class.to_s.split(/::/).last
 	end
 
+	def self.error(msg)
+		$stderr.puts "ERROR: #{msg}"
+	end
+
 	def self.info(msg)
-		puts msg unless ENV['RACK_ENV'] == 'production'
+		$stderr.puts "INFO: #{msg}" unless ENV['RACK_ENV'] == 'production'
 	end
 end
 
@@ -143,7 +175,7 @@ task :cron do
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			$stderr.puts "login database faiure. retring(#{retry_count})"
+			$stderr.puts "INFO: login database faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else

@@ -12,6 +12,7 @@ import {ENTRY_ITEM} from '../component/entry_item';
 import {DELETE_ITEM, UPDATE_MEMO} from '../component/data_column';
 import Setting, {UPDATE_SETTING} from '../component/setting';
 import {SUBMIT_PUSHBULLET} from '../component/pushbullet_setting';
+import {SUBMIT_IFTTT} from '../component/ifttt_setting';
 
 export default class App extends Flux {
 	constructor(...args) {
@@ -106,6 +107,25 @@ export default class App extends Flux {
 				return new Promise((resolve, reject) => {
 					let form = new FormData();
 					form.append('pushbullet', token);
+					form.append('ifttt', state.setting.ifttt);
+					form.append('mail', '');
+					fetch('/' + state.user + '/setting', {method: 'POST', body: form}).
+					then((res) => res.json()).
+					then((json) => {
+						state.setting = json;
+						return resolve(state);
+					}).
+					catch(err => alert(err));
+				});
+			});
+		});
+
+		this.on(SUBMIT_IFTTT, (key) => {
+			this.update((state) => {
+				return new Promise((resolve, reject) => {
+					let form = new FormData();
+					form.append('pushbullet', state.setting.pushbullet);
+					form.append('ifttt', key);
 					form.append('mail', '');
 					fetch('/' + state.user + '/setting', {method: 'POST', body: form}).
 					then((res) => res.json()).

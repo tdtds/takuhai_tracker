@@ -10,5 +10,6 @@ module TakuhaiTracker
 		validates_presence_of :user_id, allow_nil: false
 		field :pushbullet, type: String
 		field :mail, type: String
+		field :ifttt, type: String
 	end
 end

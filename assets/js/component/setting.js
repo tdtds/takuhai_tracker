@@ -8,6 +8,7 @@ import * as React from 'react';
 import {Component} from 'flumpt';
 import {MuiThemeProvider, Card, CardHeader, CardText} from 'material-ui';
 import PushbulletSetting from './pushbullet_setting';
+import IftttSetting from './ifttt_setting';
 
 export const UPDATE_SETTING = 'update-setting';
 
@@ -38,8 +39,8 @@ export default class Setting extends Component {
 		const cardStyle = {margin: '1em auto', maxWidth: '50em'};
 		let notice = '';
 
-		if (!this.props.setting.pushbullet_validation) {
-			notice = '通知先の設定がされていません';
+		if (!this.props.setting.pushbullet_validation && !this.props.setting.ifttt_validation) {
+			notice = '少なくとも一ヶ所の通知先を設定する必要があります';
 		}
 		return(<MuiThemeProvider>
 			<Card style={cardStyle}>
@@ -50,6 +51,9 @@ export default class Setting extends Component {
 					showExpandableButton={true}/>
 				<CardText expandable={true}>
 					<PushbulletSetting {...this.props}/>
+				</CardText>
+				<CardText expandable={true}>
+					<IftttSetting {...this.props}/>
 				</CardText>
 			</Card>
 		</MuiThemeProvider>);
