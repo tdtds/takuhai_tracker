@@ -28,12 +28,12 @@ module TakuhaiTracker::Task
 			return
 		rescue ItemExpired => e
 			info "   => remove expired item"
-			$stderr.puts "#{e}: remove expired item: key:#{item.key}"
+			error "#{e}: remove expired item: key:#{item.key}"
 			item.remove
 			return
 		rescue TakuhaiStatus::NotMyKey
 			info "   => removed item or API error"
-			$stderr.puts "removed item or API error: #{item.user_id}/#{item.key}"
+			error "removed item or API error: #{item.user_id}/#{item.key}"
 			return
 		end
 
@@ -48,7 +48,7 @@ module TakuhaiTracker::Task
 			begin
 				update_item(item, status)
 			rescue StandardError => e
-				$stderr.puts "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+				error "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 				return
 			end
 		end
@@ -126,7 +126,7 @@ module TakuhaiTracker::Task
 				info "  => #{e.message}"
 				raise RetryNext.new(e.message)
 			end
-			$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
@@ -136,7 +136,7 @@ module TakuhaiTracker::Task
 			ifttt = IftttWebhook.new(token)
 			ifttt.post("#{service_name} #{item.key}", body)
 		rescue StandardError => e
-			$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
@@ -153,8 +153,12 @@ module TakuhaiTracker::Task
 		status.class.to_s.split(/::/).last
 	end
 
+	def self.error(msg)
+		$stderr.puts "ERROR: #{msg}"
+	end
+
 	def self.info(msg)
-		puts msg unless ENV['RACK_ENV'] == 'production'
+		$stderr.puts "INFO: #{msg}" unless ENV['RACK_ENV'] == 'production'
 	end
 end
 
@@ -171,7 +175,7 @@ task :cron do
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			$stderr.puts "login database faiure. retring(#{retry_count})"
+			$stderr.puts "INFO: login database faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
