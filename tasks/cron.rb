@@ -15,6 +15,7 @@ module TakuhaiTracker::Task
 	}.freeze
 	class ItemNotFound < StandardError; end
 	class ItemExpired  < StandardError; end
+	class RetryNext  < StandardError; end
 
 	def self.check_item(item)
 		info "start checking #{item.key}"
@@ -39,14 +40,9 @@ module TakuhaiTracker::Task
 		if item.state != status.state
 			begin
 				send_notice(item, status)
-			rescue StandardError => e
-				# retry next chance without error about inactive user
-				if e.message =~ /Account has not been used for over a month/
-					info "  => #{e.message}"
-					return
-				end
-
-				$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			rescue RetryNext => e
+				# retry next chance without status update
+				return
 			end
 
 			begin
@@ -105,21 +101,42 @@ module TakuhaiTracker::Task
 			else
 				status.state
 			end
+
 			if setting.pushbullet && !setting.pushbullet.empty?
-				info "   => send notice via pushbullet"
-				Pushbullet.api_token = setting.pushbullet
-				Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
+				send_pushbullet_notice(setting.pushbulle, service_name, item, body)
 				done += 1
 			end
 			if setting.ifttt && !setting.ifttt.empty?
-				info "   => send notice via ifttt webhook"
-				ifttt = IftttWebhook.new(setting.ifttt)
-				ifttt.post("#{service_name} #{item.key}", body)
+				send_ifttt_notice(setting.ifttt, service_name, item, body)
 				done += 1
 			end
 		end
 		if done == 0
 			info "   => not send with bad setting"
+		end
+	end
+
+	def self.send_pushbullet_notice(token, service_name, item, body)
+		begin
+			info "   => send notice via pushbullet"
+			Pushbullet.api_token = token
+			Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
+		rescue StandardError => e
+			if e.message =~ /Account has not been used for over a month/
+				info "  => #{e.message}"
+				raise RetryNext.new(e.message)
+			end
+			$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+		end
+	end
+
+	def self.send_ifttt_notice(token, service_name, item, body)
+		begin
+			info "   => send notice via ifttt webhook"
+			ifttt = IftttWebhook.new(token)
+			ifttt.post("#{service_name} #{item.key}", body)
+		rescue StandardError => e
+			$stderr.puts "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
