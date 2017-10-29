@@ -22,12 +22,13 @@ export default class Top extends Flux {
 				</MuiThemeProvider></form>
 				<p>
 					宅配便の配送状況を定期的にチェックして、変化があったときに
-					<a href="https://www.pushbullet.com/">Pushbullet</a>で通知してくれる
+					<a href="https://www.pushbullet.com/">Pushbullet</a>や
+					<a href="https://ifttt.com">IFTTT</a>を通じて知らせてくれる
 					サービスです。現在、ヤマト運輸、佐川急便、日本郵便、TMG、UPS
 					およびFedExの6サービスに対応しています(ただしTMGはAmazonの荷物のみ、
 					FedExは試験運用中)。
-					あらかじめPushbulletのAPIトークンを設定し、あとは各サービスの
-					伝票番号を入力していくだけで使えます。
+					あらかじめPushbulletやIFTTTのAPIトークンを設定し、
+					あとは各サービスの伝票番号を入力していくだけで使えます。
 				</p>
 			</div>
 		);
