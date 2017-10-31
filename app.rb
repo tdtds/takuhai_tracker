@@ -19,8 +19,8 @@ module TakuhaiTracker
 
 		def pushbullet_valid?(token)
 			begin
-				Pushbullet.api_token = token
-				Pushbullet::Contact.me
+				client = PushbulletRuby::Client.new(token)
+				client.me
 				return true
 			rescue
 				return false
