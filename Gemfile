@@ -10,7 +10,7 @@ gem 'mongoid', '~> 6.1.0', require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'
 gem 'dotenv'
-gem 'ruby-pushbullet', require: 'pushbullet'
+gem 'pushbullet_ruby', require: 'pushbullet_ruby'
 
 gem 'takuhai_status', require: 'takuhai_status'
 

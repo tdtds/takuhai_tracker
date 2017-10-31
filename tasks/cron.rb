@@ -3,7 +3,7 @@
 #
 
 require 'dotenv'
-require 'pushbullet'
+require 'pushbullet_ruby'
 require_relative '../app'
 
 module TakuhaiTracker::Task
@@ -119,8 +119,9 @@ module TakuhaiTracker::Task
 	def self.send_pushbullet_notice(token, service_name, item, body)
 		begin
 			info "   => send notice via pushbullet"
-			Pushbullet.api_token = token
-			Pushbullet::Contact.me.push_note("#{service_name} #{item.key}", body)
+			client = PushbulletRuby::Client.new(token)
+			params = {title: "#{service_name} #{item.key}", body: body}
+			client.push_note(id: client.me, params: params)
 		rescue StandardError => e
 			if e.message =~ /Account has not been used for over a month/
 				info "  => #{e.message}"
