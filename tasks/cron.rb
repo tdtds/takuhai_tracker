@@ -4,6 +4,7 @@
 
 require 'dotenv'
 require 'pushbullet_ruby'
+require 'timeout'
 require_relative '../app'
 
 module TakuhaiTracker::Task
@@ -63,16 +64,18 @@ module TakuhaiTracker::Task
 		if item.service
 			begin
 				info "   => found existent item of #{item.service}"
-				return TakuhaiStatus.const_get(item.service).new(item.key)
+				Timeout.timeout(60) do
+					return TakuhaiStatus.const_get(item.service).new(item.key)
+				end
 			rescue TakuhaiStatus::NotMyKey
 				raise
-			rescue
+			rescue # timeout or other errors
 				raise ItemNotFound.new("failed getting item info: [#$!] key:#{item.key}")
 			end
 		else
 			info "   => found unhandled item"
 			begin
-				status = TakuhaiStatus.scan(item.key)
+				status = TakuhaiStatus.scan(item.key, timeout: 60)
 			rescue TakuhaiStatus::Multiple => e
 				raise ItemNotFound.new("found multiple services: #{e.services}")
 			rescue
