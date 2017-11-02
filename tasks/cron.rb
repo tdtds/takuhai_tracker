@@ -3,6 +3,7 @@
 #
 
 require 'dotenv'
+require 'logger'
 require 'pushbullet_ruby'
 require 'timeout'
 require_relative '../app'
@@ -18,8 +19,15 @@ module TakuhaiTracker::Task
 	class ItemExpired  < StandardError; end
 	class RetryNext  < StandardError; end
 
+	def self.logger
+		@logger if @logger
+		@logger = Logger.new($stderr)
+		@logger.level = ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
+		@logger
+	end
+
 	def self.check_item(item)
-		info "start checking #{item.key}"
+		logger.info "start checking #{item.key}"
 
 		begin
 			status = get_recent_status(item)
@@ -28,13 +36,13 @@ module TakuhaiTracker::Task
 			item.update_attributes!(time: Time.now) unless item.time
 			return
 		rescue ItemExpired => e
-			info "   => remove expired item"
-			error "#{e}: remove expired item: key:#{item.key}"
+			logger.info "   => remove expired item"
+			logger.error "#{e}: remove expired item: key:#{item.key}"
 			item.remove
 			return
 		rescue TakuhaiStatus::NotMyKey
-			info "   => removed item or API error"
-			error "removed item or API error: #{item.user_id}/#{item.key}"
+			logger.info "   => removed item or API error"
+			logger.error "removed item or API error: #{item.user_id}/#{item.key}"
 			return
 		end
 
@@ -49,13 +57,13 @@ module TakuhaiTracker::Task
 			begin
 				update_item(item, status)
 			rescue StandardError => e
-				error "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+				logger.error "failed updating status: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 				return
 			end
 		end
 
 		if status.finish?
-			info "   => remove item because finished."
+			logger.info "   => remove item because finished."
 			item.remove
 		end
 	end
@@ -63,7 +71,7 @@ module TakuhaiTracker::Task
 	def self.get_recent_status(item)
 		if item.service
 			begin
-				info "   => found existent item of #{item.service}"
+				logger.info "   => found existent item of #{item.service}"
 				Timeout.timeout(60) do
 					return TakuhaiStatus.const_get(item.service).new(item.key)
 				end
@@ -73,9 +81,9 @@ module TakuhaiTracker::Task
 				raise ItemNotFound.new("failed getting item info: [#$!] key:#{item.key}")
 			end
 		else
-			info "   => found unhandled item"
+			logger.info "   => found unhandled item"
 			begin
-				status = TakuhaiStatus.scan(item.key, timeout: 60)
+				status = TakuhaiStatus.scan(item.key, timeout: 60, logger: logger)
 			rescue TakuhaiStatus::Multiple => e
 				raise ItemNotFound.new("found multiple services: #{e.services}")
 			rescue
@@ -94,7 +102,7 @@ module TakuhaiTracker::Task
 	end
 
 	def self.send_notice(item, status)
-		info "   => start notice sending"
+		logger.info "   => start notice sending"
 		setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
 		done = 0
 		if setting
@@ -115,37 +123,37 @@ module TakuhaiTracker::Task
 			end
 		end
 		if done == 0
-			info "   => not send with bad setting"
+			logger.info "   => not send with bad setting"
 		end
 	end
 
 	def self.send_pushbullet_notice(token, service_name, item, body)
 		begin
-			info "   => send notice via pushbullet"
+			logger.info "   => send notice via pushbullet"
 			client = PushbulletRuby::Client.new(token)
 			params = {title: "#{service_name} #{item.key}", body: body}
 			client.push_note(id: client.me, params: params)
 		rescue StandardError => e
 			if e.message =~ /Account has not been used for over a month/
-				info "  => #{e.message}"
+				logger.info "  => #{e.message}"
 				raise RetryNext.new(e.message)
 			end
-			error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			logger.error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
 	def self.send_ifttt_notice(token, service_name, item, body)
 		begin
-			info "   => send notice via ifttt webhook"
+			logger.info "   => send notice via ifttt webhook"
 			ifttt = IftttWebhook.new(token)
 			ifttt.post("#{service_name} #{item.key}", body)
 		rescue StandardError => e
-			error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			logger.error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
 	def self.update_item(item, status)
-		info "   => start item updating"
+		logger.info "   => start item updating"
 		item.update_attributes!(
 			service: service_name(status),
 			time: status.time,
@@ -155,14 +163,6 @@ module TakuhaiTracker::Task
 
 	def self.service_name(status)
 		status.class.to_s.split(/::/).last
-	end
-
-	def self.error(msg)
-		$stderr.puts "ERROR: #{msg}"
-	end
-
-	def self.info(msg)
-		$stderr.puts "INFO: #{msg}" unless ENV['RACK_ENV'] == 'production'
 	end
 end
 
@@ -179,7 +179,7 @@ task :cron do
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			$stderr.puts "INFO: login database faiure. retring(#{retry_count})"
+			TakuhaiTracker::Task.logger.info "login database faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
