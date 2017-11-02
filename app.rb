@@ -89,7 +89,7 @@ module TakuhaiTracker
 
 			begin
 				begin
-					service = TakuhaiStatus.scan(key)
+					service = TakuhaiStatus.scan(key, timeout: 5, logger: logger)
 					item = TakuhaiTracker::Item.find_or_create_by(user_id: user, key: key)
 					raise Mongoid::Errors::Validations.new(item) unless item.valid?
 					unless service.finish?
