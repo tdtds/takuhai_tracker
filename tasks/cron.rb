@@ -19,12 +19,9 @@ module TakuhaiTracker::Task
 	class ItemExpired  < StandardError; end
 	class RetryNext  < StandardError; end
 
-	def self.logger
-		@logger if @logger
-		@logger = Logger.new($stderr)
-		@logger.level = ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
-		@logger
-	end
+	@@logger = Logger.new($stderr)
+	@@logger.level = ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
+	def self.logger; @@logger; end
 
 	def self.check_item(item)
 		logger.info "start checking #{item.key}"
