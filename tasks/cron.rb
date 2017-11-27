@@ -173,6 +173,15 @@ task :cron do
 		TakuhaiTracker::Item.all.each do |item|
 			TakuhaiTracker::Task.check_item(item)
 		end
+	rescue Mongo::Error::OperationFailure
+		retry_count += 1
+		if retry_count < 5 # retry 5 times each 5 seconds
+			TakuhaiTracker::Task.logger.info "database operation faiure. retring(#{retry_count})"
+			sleep 5
+			retry
+		else
+			raise
+		end
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
