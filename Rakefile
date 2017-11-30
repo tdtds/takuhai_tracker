@@ -12,6 +12,7 @@ rescue LoadError => e
 end
 
 require './tasks/cron'
+require './tasks/db'
 
 # Local Variables:
 # mode: ruby
