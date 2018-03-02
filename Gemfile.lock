@@ -22,7 +22,7 @@ GEM
     faraday-cookie_jar (0.0.6)
       faraday (>= 0.7.4)
       http-cookie (~> 1.0.0)
-    ffi (1.9.22)
+    ffi (1.9.23)
     formatador (0.2.5)
     guard (2.14.2)
       formatador (>= 0.2.4)
