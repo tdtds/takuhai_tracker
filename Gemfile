@@ -12,8 +12,9 @@ gem 'pushbullet_ruby', require: 'pushbullet_ruby'
 
 gem 'takuhai_status', require: 'takuhai_status'
 
+gem 'rake'
+
 group :development, :test do
-	gem 'rake'
 	gem 'guard-rspec'
 	gem 'sinatra-reloader', require: 'sinatra/reloader'
 	gem 'pry'
