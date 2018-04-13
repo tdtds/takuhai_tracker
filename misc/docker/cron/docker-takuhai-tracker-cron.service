@@ -1,6 +1,6 @@
 [Unit]
 Description=Takuhai Tracker Cron Task on Docker
-Documentation=https://github.com/tdtds/takuhai-tracker/misc/docker/cron/
+Documentation=https://github.com/tdtds/takuhai_tracker/tree/master/misc/docker/cron
 Requires=docker.service
 After=docker.service
 
