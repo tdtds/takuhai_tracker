@@ -1,0 +1,4 @@
+#!/bin/sh
+pidof -x `basename $0` -o $$ > /dev/null && exit
+cd /opt/takuhai-tracker
+bundle exec rake --quiet cron #> /dev/null

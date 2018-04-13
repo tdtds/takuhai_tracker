@@ -13,6 +13,7 @@ end
 
 require './tasks/cron'
 require './tasks/db'
+require './tasks/docker'
 
 # Local Variables:
 # mode: ruby
