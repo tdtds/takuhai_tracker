@@ -4,7 +4,7 @@ gem 'sinatra', require: 'sinatra/base'
 
 gem 'puma'
 gem 'hamlit', require: 'hamlit'
-gem 'mongoid', '~> 6.1.0', require: 'mongoid'
+gem 'mongoid', '~> 7.0.1', require: 'mongoid'
 gem 'bson_ext'
 gem 'rack_csrf', require: 'rack/csrf'
 gem 'dotenv'
