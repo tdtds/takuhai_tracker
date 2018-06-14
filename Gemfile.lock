@@ -69,9 +69,9 @@ GEM
     minitest (5.11.3)
     mongo (2.5.3)
       bson (>= 4.3.0, < 5.0.0)
-    mongoid (6.1.1)
-      activemodel (~> 5.0)
-      mongo (>= 2.4.1, < 3.0.0)
+    mongoid (7.0.1)
+      activemodel (>= 5.1, < 6.0.0)
+      mongo (>= 2.5.1, < 3.0.0)
     multi_json (1.13.1)
     multipart-post (2.0.0)
     mustermann (1.0.2)
@@ -154,7 +154,7 @@ DEPENDENCIES
   dotenv
   guard-rspec
   hamlit
-  mongoid (~> 6.1.0)
+  mongoid (~> 7.0.1)
   pry
   puma
   pushbullet_ruby
