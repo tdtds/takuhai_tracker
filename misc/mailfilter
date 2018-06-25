@@ -2,7 +2,7 @@ RUBY=/usr/bin/ruby
 PTT=/home/hoge/bin/post-takuhai-tracker
 TTID=YOUR_TAKUHAI_TRACKER_ID
 
-if ( /^From:.*shipment-tracking@amazon.co.jp/ )
+if ( /^From:.*order-update@amazon.co.jp/ )
 {
 	cc "| ${RUBY} ${PTT} ${TTID}"
 }
