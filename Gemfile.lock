@@ -154,7 +154,7 @@ DEPENDENCIES
   dotenv
   guard-rspec
   hamlit
-  mongoid (~> 7.0.1)
+  mongoid (~> 7.0.2)
   pry
   puma
   pushbullet_ruby
