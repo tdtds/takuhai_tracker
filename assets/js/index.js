@@ -8,11 +8,9 @@ import 'babel-polyfill';
 import 'whatwg-fetch';
 import * as React from 'react';
 import {render} from 'react-dom';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import Top from './container/top';
 
 require('../css/main.css');
-injectTapEventPlugin();
 
 const main = document.querySelector('#main');
 const state = {};
