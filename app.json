@@ -1,6 +1,8 @@
 {
   "name": "TakuhaiTracker",
-  "scripts": {},
+  "scripts": {
+    "postdeploy": "npm run production"
+  },
   "env":{
     "LANG":"ja_JP.UTF-8",
     "RACK_ENV":"production"
@@ -10,7 +12,6 @@
   ],
   "buildpacks": [
     {"url": "https://github.com/heroku/heroku-buildpack-ruby"},
-    {"url": "https://github.com/heroku/heroku-buildpack-nodejs"},
-    {"url": "https://github.com/tdtds/heroku-buildpack-webpack"}
+    {"url": "https://github.com/heroku/heroku-buildpack-nodejs"}
   ]
 }
