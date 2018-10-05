@@ -7,7 +7,8 @@
     "production": "webpack -p",
     "develop": "webpack -d",
     "watch": "webpack -d --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "npm run production"
   },
   "author": "TADA, Tadashi",
   "license": "GPL",

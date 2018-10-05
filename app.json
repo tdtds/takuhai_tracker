@@ -1,8 +1,6 @@
 {
   "name": "TakuhaiTracker",
-  "scripts": {
-    "postdeploy": "npm run production"
-  },
+  "scripts": {},
   "env":{
     "LANG":"ja_JP.UTF-8",
     "RACK_ENV":"production"
