@@ -7,7 +7,7 @@ require_relative '../models/item'
 
 namespace :db do
 	def initialize_database
-		Dotenv.load unless ENV['RACK_ENV'] != 'production'
+		Dotenv.load if ENV['RACK_ENV'] == 'production' || ENV['RACK_ENV'] == nil
 		Mongoid::load!('config/mongoid.yml')
 	end
 
