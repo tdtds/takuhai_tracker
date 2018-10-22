@@ -1,7 +1,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 2.5.2'
+ruby '~> 2.5'
 
 gem 'sinatra', require: 'sinatra/base'
 

@@ -1,1 +1,5 @@
 vendor
+node_modules
+spec
+public/css
+public/js
