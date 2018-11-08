@@ -92,7 +92,7 @@ GEM
     pushbullet_ruby (1.1.4)
       faraday (>= 0.13.0, < 1.0)
       mime-types
-    rack (2.0.5)
+    rack (2.0.6)
     rack-protection (2.0.4)
       rack
     rack_csrf (2.6.0)
