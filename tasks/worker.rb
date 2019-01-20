@@ -1,5 +1,5 @@
 #
-# Takuhai Tracker cron task on rake
+# Takuhai Tracker worker process on rake
 #
 
 require 'dotenv'
@@ -163,8 +163,8 @@ module TakuhaiTracker::Task
 	end
 end
 
-desc 'Takuhai Tracker cron task'
-task :cron do
+desc 'Takuhai Tracker Worker'
+task :worker do
 	Dotenv.load if ENV['RACK_ENV'] == 'production'
 	Mongoid::load!('config/mongoid.yml')
 

@@ -11,7 +11,7 @@ begin
 rescue LoadError => e
 end
 
-require './tasks/cron'
+require './tasks/worker'
 require './tasks/db'
 require './tasks/docker'
 

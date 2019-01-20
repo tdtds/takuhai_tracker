@@ -1,5 +1,5 @@
 #
-# Dockerfile for Takuhai Tracker cron task
+# Dockerfile for Takuhai Tracker worker process
 #
 # need some ENVs:
 #   MONGODB_URI
@@ -7,8 +7,10 @@
 FROM ruby:2.6
 LABEL maintainer "@tdtds <t@tdtds.jp>"
 
-RUN apt update && apt install -y busybox-static; mkdir -p /app/takuhai-tracker
-COPY ["misc/docker/cron/crontab", "/var/spool/cron/crontabs/root"]
+RUN apt update && apt install -y busybox-static; \
+    mkdir -p /app/takuhai-tracker; \
+	 mkdir -p /var/spool/cron/crontabs
+COPY ["misc/docker/worker/crontab", "/var/spool/cron/crontabs/root"]
 COPY ["Gemfile", "Gemfile.lock", "/app/takuhai-tracker/"]
 
 WORKDIR /app/takuhai-tracker
