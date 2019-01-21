@@ -182,7 +182,6 @@ end
 
 desc 'Takuhai Tracker Worker'
 task :worker do
-	Dotenv.load if ENV['RACK_ENV'] == 'production'
 	Mongoid::load!('config/mongoid.yml')
 
 	retry_count = 0

@@ -7,11 +7,10 @@ require_relative '../models/item'
 
 namespace :db do
 	def initialize_database
-		Dotenv.load if ENV['RACK_ENV'] == 'production' || ENV['RACK_ENV'] == nil
 		Mongoid::load!('config/mongoid.yml')
 	end
 
-	desc 'Database search key in production'
+	desc 'Database search key (set RACK_ENV and MONGOLAB_URI)'
 	task :search_key, :key do |task, args|
 		initialize_database
 		begin
@@ -22,7 +21,7 @@ namespace :db do
 		end
 	end
 
-	desc 'Database delete key in production'
+	desc 'Database delete key (set RACK_ENV and MONGOLAB_URI)'
 	task :delete_key, :key do |task, args|
 		initialize_database
 		begin
