@@ -19,9 +19,21 @@ module TakuhaiTracker::Task
 	class ItemExpired  < StandardError; end
 	class RetryNext  < StandardError; end
 
-	@@logger = Logger.new($stderr)
-	@@logger.level = ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
-	def self.logger; @@logger; end
+	def self.logger
+		begin
+			return @@logger;
+		rescue NameError
+			@@logger = Logger.new($stderr)
+			@@logger.lovel = case ENV['LOGLEVEL']
+			when /^E/; Logger::ERROR
+			when /^D/; Logger::DEBUG
+			when /^I/; Logger::INFO
+			else
+				ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
+			end
+			return @@logger
+		end
+	end
 
 	def self.check_item(item)
 		logger.info "start checking #{item.key}"
@@ -131,11 +143,15 @@ module TakuhaiTracker::Task
 			params = {title: "#{service_name} #{item.key}", body: body}
 			client.push_note(id: client.me, params: params)
 		rescue StandardError => e
-			if e.message =~ /Account has not been used for over a month/
+			case e.message
+			when /Account has not been used for over a month/
 				logger.info "  => #{e.message}"
 				raise RetryNext.new(e.message)
+			when /Pushbullet Pro is required/
+				logger.info "rejected sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			else
+				logger.error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 			end
-			logger.error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
