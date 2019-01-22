@@ -8,7 +8,7 @@ require 'pushbullet_ruby'
 require 'timeout'
 require_relative '../app'
 
-module TakuhaiTracker::Task
+module TakuhaiTracker::Worker
 	SERVICES = {
 		'JapanPost'      => '日本郵便',
 		'KuronekoYamato' => 'ヤマト運輸',
@@ -187,12 +187,12 @@ task :worker do
 	retry_count = 0
 	begin
 		TakuhaiTracker::Item.all.each do |item|
-			TakuhaiTracker::Task.check_item(item)
+			TakuhaiTracker::Worker.check_item(item)
 		end
 	rescue Mongo::Error::OperationFailure
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			TakuhaiTracker::Task.logger.info "database operation faiure. retring(#{retry_count})"
+			TakuhaiTracker::Worker.logger.info "database operation faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
@@ -201,7 +201,7 @@ task :worker do
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			TakuhaiTracker::Task.logger.debug "login database faiure. retring(#{retry_count})"
+			TakuhaiTracker::Worker.logger.debug "login database faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
