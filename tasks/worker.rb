@@ -1,6 +1,12 @@
 #
 # Takuhai Tracker worker process on rake
 #
+# switch mode by environment variebles
+#   RACK_ENV: 'production' or not
+#   MONGOLAB_URI or MONGODB_URI
+#   LOGLEVEL: E, W, I or D
+#   DRY_RUN: true: running under dry run mode
+#
 
 require 'dotenv'
 require 'logger'
@@ -8,7 +14,7 @@ require 'pushbullet_ruby'
 require 'timeout'
 require_relative '../app'
 
-module TakuhaiTracker::Task
+module TakuhaiTracker::Worker
 	SERVICES = {
 		'JapanPost'      => '日本郵便',
 		'KuronekoYamato' => 'ヤマト運輸',
@@ -19,33 +25,50 @@ module TakuhaiTracker::Task
 	class ItemExpired  < StandardError; end
 	class RetryNext  < StandardError; end
 
-	@@logger = Logger.new($stderr)
-	@@logger.level = ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
-	def self.logger; @@logger; end
+	def self.logger
+		begin
+			return @@logger;
+		rescue NameError
+			@@logger = Logger.new($stderr)
+			@@logger.level = case ENV['LOGLEVEL']
+			when /^E/; Logger::ERROR
+			when /^W/; Logger::WARN
+			when /^I/; Logger::INFO
+			when /^D/; Logger::DEBUG
+			else
+				ENV['RACK_ENV'] == 'production' ? Logger::ERROR : Logger::DEBUG
+			end
+			return @@logger
+		end
+	end
+
+	def self.dry_run?
+		return !!(ENV['DRY_RUN'] =~ /^t/i)
+	end
 
 	def self.check_item(item)
-		logger.info "start checking #{item.key}"
+		logger.debug "start checking #{item.key}"
 
 		begin
 			status = get_recent_status(item)
 		rescue ItemNotFound => e
 			# save 1st checking timestamp to countdown for expire
-			item.update_attributes!(time: Time.now) unless item.time
+			item.update_attributes!(time: Time.now) unless item.time || dry_run?
 			return
 		rescue ItemExpired => e
-			logger.info "   => remove expired item"
+			logger.debug "   => remove expired item"
 			logger.error "#{e}: remove expired item: key:#{item.key}"
 			item.remove
 			return
 		rescue TakuhaiStatus::NotMyKey
-			logger.info "   => removed item or API error"
+			logger.debug "   => removed item or API error"
 			logger.error "removed item or API error: #{item.user_id}/#{item.key}"
 			return
 		end
 
 		if item.state != status.state
 			begin
-				send_notice(item, status)
+				send_notice(item, status) unless dry_run?
 			rescue RetryNext => e
 				# retry next chance without status update
 				return
@@ -60,15 +83,15 @@ module TakuhaiTracker::Task
 		end
 
 		if status.finish?
-			logger.info "   => remove item because finished."
-			item.remove
+			logger.debug "   => remove item because finished."
+			item.remove unless dry_run?
 		end
 	end
 
 	def self.get_recent_status(item)
 		if item.service
 			begin
-				logger.info "   => found existent item of #{item.service}"
+				logger.debug "   => found existent item of #{item.service}"
 				Timeout.timeout(60) do
 					return TakuhaiStatus.const_get(item.service).new(item.key)
 				end
@@ -78,7 +101,7 @@ module TakuhaiTracker::Task
 				raise ItemNotFound.new("failed getting item info: [#$!] key:#{item.key}")
 			end
 		else
-			logger.info "   => found unhandled item"
+			logger.debug "   => found unhandled item"
 			begin
 				status = TakuhaiStatus.scan(item.key, timeout: 60, logger: logger)
 			rescue TakuhaiStatus::Multiple => e
@@ -99,7 +122,7 @@ module TakuhaiTracker::Task
 	end
 
 	def self.send_notice(item, status)
-		logger.info "   => start notice sending"
+		logger.debug "   => start notice sending"
 		setting = TakuhaiTracker::Setting.where(user_id: item.user_id).first
 		done = 0
 		if setting
@@ -120,28 +143,32 @@ module TakuhaiTracker::Task
 			end
 		end
 		if done == 0
-			logger.info "   => not send with bad setting"
+			logger.debug "   => not send with bad setting"
 		end
 	end
 
 	def self.send_pushbullet_notice(token, service_name, item, body)
 		begin
-			logger.info "   => send notice via pushbullet"
+			logger.debug "   => send notice via pushbullet"
 			client = PushbulletRuby::Client.new(token)
 			params = {title: "#{service_name} #{item.key}", body: body}
 			client.push_note(id: client.me, params: params)
 		rescue StandardError => e
-			if e.message =~ /Account has not been used for over a month/
-				logger.info "  => #{e.message}"
+			case e.message
+			when /Account has not been used for over a month/
+				logger.debug "  => #{e.message}"
 				raise RetryNext.new(e.message)
+			when /Pushbullet Pro is required/
+				logger.warn "rejected sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
+			else
+				logger.error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 			end
-			logger.error "failed sending notice: #{e.class}:#{e} #{item.user_id}/#{item.key}"
 		end
 	end
 
 	def self.send_ifttt_notice(token, service_name, item, body)
 		begin
-			logger.info "   => send notice via ifttt webhook"
+			logger.debug "   => send notice via ifttt webhook"
 			ifttt = IftttWebhook.new(token)
 			ifttt.post("#{service_name} #{item.key}", body)
 		rescue StandardError => e
@@ -150,12 +177,12 @@ module TakuhaiTracker::Task
 	end
 
 	def self.update_item(item, status)
-		logger.info "   => start item updating"
+		logger.debug "   => start item updating"
 		item.update_attributes!(
 			service: service_name(status),
 			time: status.time,
 			state: status.state
-		)
+		) unless dry_run?
 	end
 
 	def self.service_name(status)
@@ -165,18 +192,20 @@ end
 
 desc 'Takuhai Tracker Worker'
 task :worker do
-	Dotenv.load if ENV['RACK_ENV'] == 'production'
+	logger = TakuhaiTracker::Worker.logger
+	logger.debug "running under dry run mode" if TakuhaiTracker::Worker.dry_run?
+
 	Mongoid::load!('config/mongoid.yml')
 
 	retry_count = 0
 	begin
 		TakuhaiTracker::Item.all.each do |item|
-			TakuhaiTracker::Task.check_item(item)
+			TakuhaiTracker::Worker.check_item(item)
 		end
 	rescue Mongo::Error::OperationFailure
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			TakuhaiTracker::Task.logger.info "database operation faiure. retring(#{retry_count})"
+			logger.info "database operation faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
@@ -185,7 +214,7 @@ task :worker do
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			TakuhaiTracker::Task.logger.info "login database faiure. retring(#{retry_count})"
+			logger.debug "login database faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
