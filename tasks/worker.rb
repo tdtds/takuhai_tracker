@@ -24,7 +24,7 @@ module TakuhaiTracker::Worker
 			return @@logger;
 		rescue NameError
 			@@logger = Logger.new($stderr)
-			@@logger.lovel = case ENV['LOGLEVEL']
+			@@logger.level = case ENV['LOGLEVEL']
 			when /^E/; Logger::ERROR
 			when /^W/; Logger::WARN
 			when /^I/; Logger::INFO
