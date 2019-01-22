@@ -1,6 +1,12 @@
 #
 # Takuhai Tracker worker process on rake
 #
+# switch mode by environment variebles
+#   RACK_ENV: 'production' or not
+#   MONGOLAB_URI or MONGODB_URI
+#   LOGLEVEL: E, W, I or D
+#   DRY_RUN: true: running under dry run mode
+#
 
 require 'dotenv'
 require 'logger'
@@ -36,6 +42,10 @@ module TakuhaiTracker::Worker
 		end
 	end
 
+	def self.dry_run?
+		return !!(ENV['DRY_RUN'] =~ /^t/i)
+	end
+
 	def self.check_item(item)
 		logger.debug "start checking #{item.key}"
 
@@ -43,7 +53,7 @@ module TakuhaiTracker::Worker
 			status = get_recent_status(item)
 		rescue ItemNotFound => e
 			# save 1st checking timestamp to countdown for expire
-			item.update_attributes!(time: Time.now) unless item.time
+			item.update_attributes!(time: Time.now) unless item.time || dry_run?
 			return
 		rescue ItemExpired => e
 			logger.debug "   => remove expired item"
@@ -58,7 +68,7 @@ module TakuhaiTracker::Worker
 
 		if item.state != status.state
 			begin
-				send_notice(item, status)
+				send_notice(item, status) unless dry_run?
 			rescue RetryNext => e
 				# retry next chance without status update
 				return
@@ -74,7 +84,7 @@ module TakuhaiTracker::Worker
 
 		if status.finish?
 			logger.debug "   => remove item because finished."
-			item.remove
+			item.remove unless dry_run?
 		end
 	end
 
@@ -172,7 +182,7 @@ module TakuhaiTracker::Worker
 			service: service_name(status),
 			time: status.time,
 			state: status.state
-		)
+		) unless dry_run?
 	end
 
 	def self.service_name(status)
@@ -182,6 +192,9 @@ end
 
 desc 'Takuhai Tracker Worker'
 task :worker do
+	logger = TakuhaiTracker::Worker.logger
+	logger.debug "running under dry run mode" if TakuhaiTracker::Worker.dry_run?
+
 	Mongoid::load!('config/mongoid.yml')
 
 	retry_count = 0
@@ -192,7 +205,7 @@ task :worker do
 	rescue Mongo::Error::OperationFailure
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			TakuhaiTracker::Worker.logger.info "database operation faiure. retring(#{retry_count})"
+			logger.info "database operation faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
@@ -201,7 +214,7 @@ task :worker do
 	rescue Mongo::Auth::Unauthorized
 		retry_count += 1
 		if retry_count < 5 # retry 5 times each 5 seconds
-			TakuhaiTracker::Worker.logger.debug "login database faiure. retring(#{retry_count})"
+			logger.debug "login database faiure. retring(#{retry_count})"
 			sleep 5
 			retry
 		else
