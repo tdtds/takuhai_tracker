@@ -57,7 +57,7 @@ module TakuhaiTracker::Worker
 			return
 		rescue ItemExpired => e
 			logger.debug "   => remove expired item"
-			logger.error "#{e}: remove expired item: key:#{item.key}"
+			logger.info "#{e}: remove expired item: key:#{item.key}"
 			item.remove
 			return
 		rescue TakuhaiStatus::NotMyKey
