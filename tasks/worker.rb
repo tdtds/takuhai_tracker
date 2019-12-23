@@ -21,6 +21,10 @@ module TakuhaiTracker::Worker
 		'Sagawa'         => '佐川急便',
 		'TMGCargo'       => 'TMG'
 	}.freeze
+	(ENV['IGNORE_SERVICES'] || '').split(/,/).each do |service|
+		TakuhaiStatus.ignore_service(service)
+	end
+
 	class ItemNotFound < StandardError; end
 	class ItemExpired  < StandardError; end
 	class RetryNext  < StandardError; end

@@ -15,6 +15,9 @@ module TakuhaiTracker
 		configure do
 			Mongoid::load!('config/mongoid.yml')
 			Mongo::Logger.level = Logger::FATAL
+			(ENV['IGNORE_SERVICES'] || '').split(/,/).each do |service|
+				TakuhaiStatus.ignore_service(service)
+			end
 		end
 
 		def pushbullet_valid?(token)
