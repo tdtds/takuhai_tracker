@@ -21,9 +21,6 @@ module TakuhaiTracker::Worker
 		'Sagawa'         => '佐川急便',
 		'TMGCargo'       => 'TMG'
 	}.freeze
-	(ENV['IGNORE_SERVICES'] || '').split(/,/).each do |service|
-		TakuhaiStatus.ignore_service(service)
-	end
 
 	class ItemNotFound < StandardError; end
 	class ItemExpired  < StandardError; end
@@ -200,6 +197,12 @@ task :worker do
 	logger.debug "running under dry run mode" if TakuhaiTracker::Worker.dry_run?
 
 	Mongoid::load!('config/mongoid.yml')
+
+	(ENV['IGNORE_SERVICES'] || '').split(/,/).each do |service|
+		unless TakuhaiStatus.ignore_service(service.to_sym)
+			logger.warn "invalid ignore service name: #{service}"
+		end
+	end
 
 	retry_count = 0
 	begin
