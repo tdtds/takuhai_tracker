@@ -21,7 +21,6 @@ module TakuhaiTracker::Worker
 		'Sagawa'         => '佐川急便',
 		'TMGCargo'       => 'TMG'
 	}.freeze
-
 	class ItemNotFound < StandardError; end
 	class ItemExpired  < StandardError; end
 	class RetryNext  < StandardError; end
