@@ -1,7 +1,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 2.6'
+ruby '~> 2.7.0'
 
 gem 'sinatra', require: 'sinatra/base'
 
@@ -20,6 +20,5 @@ gem 'rake'
 group :development, :test do
 	gem 'guard-rspec'
 	gem 'sinatra-reloader', require: 'sinatra/reloader'
-	gem 'pry'
 end
 
