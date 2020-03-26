@@ -4,7 +4,7 @@
 # need some ENVs:
 #   MONGODB_URI
 #
-FROM ruby:2.6
+FROM ruby:2.7
 LABEL maintainer "@tdtds <t@tdtds.jp>"
 
 RUN apt update && apt install -y busybox-static; \
