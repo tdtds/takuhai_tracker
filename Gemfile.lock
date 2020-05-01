@@ -69,9 +69,9 @@ GEM
     mime-types-data (3.2019.1009)
     mini_portile2 (2.4.0)
     minitest (5.14.0)
-    mongo (2.11.4)
-      bson (>= 4.4.2, < 5.0.0)
-    mongoid (7.1.0)
+    mongo (2.12.1)
+      bson (>= 4.8.2, < 5.0.0)
+    mongoid (7.1.1)
       activemodel (>= 5.1, < 6.1)
       mongo (>= 2.7.0, < 3.0.0)
     multi_json (1.14.1)
@@ -144,7 +144,7 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    tzinfo (1.2.6)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
@@ -160,7 +160,7 @@ DEPENDENCIES
   dotenv
   guard-rspec
   hamlit
-  mongoid (~> 7.1.0)
+  mongoid (~> 7.1.1)
   puma
   pushbullet_ruby
   rack_csrf
