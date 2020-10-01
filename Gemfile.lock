@@ -41,7 +41,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    hamlit (2.11.1)
+    hamlit (2.12.0)
       temple (>= 0.8.2)
       thor
       tilt
