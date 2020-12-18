@@ -6,7 +6,6 @@
     "RACK_ENV":"production"
   },
   "addons":[
-    "mongolab"
   ],
   "buildpacks": [
     {"url": "https://github.com/heroku/heroku-buildpack-ruby"},
