@@ -41,7 +41,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    hamlit (2.14.1)
+    hamlit (2.14.4)
       temple (>= 0.8.2)
       thor
       tilt
@@ -141,7 +141,7 @@ GEM
       faraday_middleware
       mechanize
     temple (0.8.2)
-    thor (1.0.1)
+    thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
     tzinfo (1.2.8)
