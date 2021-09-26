@@ -11,7 +11,7 @@ class IftttWebhook
 		begin
 			# use invalid trigger 'takuhai_tracker_test'
 			# to avoid error activity logged on IFTTT
-			open("#{CHECK_ENTRY}#{key}", &:read)
+			URI.open("#{CHECK_ENTRY}#{key}", &:read)
 			return true
 		rescue OpenURI::HTTPError
 			return false
